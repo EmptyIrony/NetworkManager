@@ -30,12 +30,14 @@ public class PlayerData {
     private List<String> ignored;
     private List<UUID> friends;
     private String lastMsg;
+    private boolean notify;
 
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid.toString();
         this.ignored = new ArrayList<>();
         this.friends = new ArrayList<>();
+        this.notify = true;
         load();
     }
 

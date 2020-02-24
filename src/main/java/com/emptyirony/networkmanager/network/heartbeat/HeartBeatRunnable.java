@@ -1,8 +1,9 @@
 package com.emptyirony.networkmanager.network.heartbeat;
 
+import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
+import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.network.packet.PacketHeartBeat;
-import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
 import lombok.AllArgsConstructor;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
@@ -41,8 +42,12 @@ public class HeartBeatRunnable extends BukkitRunnable {
 
         dead.forEach(s -> {
             ServerInfo.getCache().remove(s);
-            PacketStaffMsg packetStaffMsg = new PacketStaffMsg("console", s + " 服务器离线了", "ServerOffline");
-            NetworkManager.getInstance().getPidgin().sendPacket(packetStaffMsg);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                PlayerData data = new PlayerData(player.getUniqueId());
+                if (data.isNotify() && player.hasPermission("panshi.mod")) {
+                    player.sendMessage(CC.translate("&e[员工频道] &c" + "CONSOLE" + ": &f" + s + " 服务器离线了" + "&e(" + "ServerOffline" + ")"));
+                }
+            }
         });
     }
 }

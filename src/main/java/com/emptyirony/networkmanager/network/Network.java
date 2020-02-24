@@ -2,6 +2,7 @@ package com.emptyirony.networkmanager.network;
 
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.network.command.NetworkCommand;
+import com.emptyirony.networkmanager.network.command.StaffCommand;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
 import com.emptyirony.networkmanager.network.packet.PacketHeartBeat;
@@ -40,6 +41,7 @@ public class Network {
         plugin.getPidgin().registerPacket(PacketStaffMsg.class);
 
         Stone.get().getHoncho().registerCommand(new NetworkCommand());
+        Stone.get().getHoncho().registerCommand(new StaffCommand());
         System.out.println("已注册NetWork指令！");
 
         new HeartBeatRunnable(SERVER_NAME).runTaskTimerAsynchronously(plugin, 20, 20);
