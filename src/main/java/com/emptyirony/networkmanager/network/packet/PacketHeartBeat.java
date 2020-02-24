@@ -19,11 +19,13 @@ public class PacketHeartBeat implements Packet {
     private String name;
     private List<String> onlinePlayers;
     private String motd;
+    private long time;
 
     public PacketHeartBeat(String name, List<String> onlinePlayers, String motd) {
         this.name = name;
         this.onlinePlayers = onlinePlayers;
         this.motd = motd;
+        this.time = System.currentTimeMillis();
     }
 
     public PacketHeartBeat() {
@@ -39,6 +41,7 @@ public class PacketHeartBeat implements Packet {
         JsonObject json = new JsonObject();
         json.addProperty("motd", motd);
         json.addProperty("name", name);
+        json.addProperty("time", time);
         JsonArray array = new JsonArray();
         for (String player : onlinePlayers) {
             array.add(player);
@@ -51,6 +54,7 @@ public class PacketHeartBeat implements Packet {
     public void deserialize(JsonObject object) {
         this.motd = object.get("motd").getAsString();
         this.name = object.get("name").getAsString();
+        this.time = object.get("time").getAsLong();
         this.onlinePlayers = new ArrayList<>();
         if (!object.getAsJsonArray("online").isJsonNull()) {
             for (JsonElement element : object.get("online").getAsJsonArray()) {

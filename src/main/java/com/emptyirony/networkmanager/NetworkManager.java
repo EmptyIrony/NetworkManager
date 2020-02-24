@@ -1,6 +1,7 @@
 package com.emptyirony.networkmanager;
 
 import com.emptyirony.networkmanager.chat.command.IgnoreCommand;
+import com.emptyirony.networkmanager.chat.command.MsgCommand;
 import com.emptyirony.networkmanager.chat.listener.ChatListener;
 import com.emptyirony.networkmanager.data.listener.DataListener;
 import com.emptyirony.networkmanager.database.MongoDB;
@@ -47,6 +48,7 @@ public final class NetworkManager extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), NetworkManager.getInstance());
         System.out.println("聊天监听系统初始完成");
         Stone.get().getHoncho().registerCommand(new IgnoreCommand());
+        Stone.get().getHoncho().registerCommand(new MsgCommand());
         System.out.println("聊天指令系统初始完成");
     }
 

@@ -4,6 +4,7 @@ import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
+import strafe.games.core.profile.Profile;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ import java.util.List;
  * 3 * @Date: 2020/2/24 9:50
  * 4
  */
-@CommandMeta(label = "ignore", async = true)
+@CommandMeta(label = {"ignore", "blacklist"}, async = true)
 public class IgnoreCommand {
 
     public void execute(Player player, String target) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid());
 
         if (target.equalsIgnoreCase("list")) {
             List<String> ignored = data.getIgnored();
@@ -43,7 +44,7 @@ public class IgnoreCommand {
     }
 
     public void execute(Player player, String option, String target) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid());
 
         option = option.toLowerCase();
 

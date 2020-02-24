@@ -18,11 +18,13 @@ public class ServerInfo {
     private String serverName;
     private List<String> players;
     private String motd;
+    private long lastHeartBeat;
 
-    public ServerInfo(String serverName, List<String> players, String motd) {
+    public ServerInfo(String serverName, List<String> players, String motd, long time) {
         this.serverName = serverName;
         this.players = players;
         this.motd = motd;
+        this.lastHeartBeat = time;
         cache.put(serverName, this);
     }
 

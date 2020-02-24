@@ -5,6 +5,7 @@ import com.emptyirony.networkmanager.network.command.NetworkCommand;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
 import com.emptyirony.networkmanager.network.packet.PacketHeartBeat;
+import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import strafe.games.core.Stone;
@@ -36,6 +37,7 @@ public class Network {
         plugin.getPidgin().registerListener(new NetworkListener(plugin));
         System.out.println("已注册NetWork数据包监听器！");
         plugin.getPidgin().registerPacket(PacketHeartBeat.class);
+        plugin.getPidgin().registerPacket(PacketStaffMsg.class);
 
         Stone.get().getHoncho().registerCommand(new NetworkCommand());
         System.out.println("已注册NetWork指令！");
