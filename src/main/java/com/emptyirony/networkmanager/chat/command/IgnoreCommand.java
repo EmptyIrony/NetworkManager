@@ -4,7 +4,6 @@ import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
-import strafe.games.core.profile.Profile;
 
 import java.util.List;
 
@@ -17,70 +16,70 @@ import java.util.List;
 public class IgnoreCommand {
 
     public void execute(Player player, String target) {
-        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid());
+        PlayerData myself = new PlayerData(player.getUniqueId()).load();
 
         if (target.equalsIgnoreCase("list")) {
-            List<String> ignored = data.getIgnored();
+            List<String> ignored = myself.getIgnored();
             if (ignored.isEmpty()) {
                 player.sendMessage(CC.translate("&c你的黑名单中没有玩家"));
                 return;
             }
-            player.sendMessage("&7&m------------------------");
-            player.sendMessage("&c黑名单列表: ");
+            player.sendMessage(CC.translate("&7&m------------------------"));
+            player.sendMessage(CC.translate("&c黑名单列表: "));
             ignored.forEach(name -> {
-                player.sendMessage("&7 - " + name);
+                player.sendMessage(CC.translate("&7 - " + name));
             });
-            player.sendMessage("&7&m------------------------");
+            player.sendMessage(CC.translate("&7&m------------------------"));
             return;
         }
 
-        if (data.getIgnored().contains(target.toLowerCase())) {
+        if (myself.getIgnored().contains(target.toLowerCase())) {
             player.sendMessage(CC.translate("&c那名玩家已经在你的黑名单中了"));
             return;
         }
 
-        data.getIgnored().add(target.toLowerCase());
+        myself.getIgnored().add(target.toLowerCase());
         player.sendMessage(CC.translate("&c已将 &6" + target + "&c 添加到黑名单中"));
     }
 
     public void execute(Player player, String option, String target) {
-        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid());
+        PlayerData myself = new PlayerData(player.getUniqueId()).load();
 
         option = option.toLowerCase();
 
         switch (option) {
             case "add":
-                if (data.getIgnored().contains(target.toLowerCase())) {
+                if (myself.getIgnored().contains(target.toLowerCase())) {
                     player.sendMessage(CC.translate("&c那名玩家已经在你的黑名单中了"));
                     return;
                 }
 
-                data.getIgnored().add(target.toLowerCase());
+                myself.getIgnored().add(target.toLowerCase());
                 player.sendMessage(CC.translate("&c已将 &6" + target + "&c 添加到黑名单中"));
-                data.save(false);
+                myself.save(false);
                 break;
             case "remove":
-                if (!data.getIgnored().contains(target.toLowerCase())) {
+                if (!myself.getIgnored().contains(target.toLowerCase())) {
                     player.sendMessage(CC.translate("&c那名玩家不在你的黑名单中"));
                     return;
                 }
 
-                data.getIgnored().add(target.toLowerCase());
+                myself.getIgnored().remove(target.toLowerCase());
                 player.sendMessage(CC.translate("&c已将 &6" + target + "&c 移除黑名单"));
-                data.save(false);
+                myself.save(false);
                 break;
             case "list":
-                List<String> ignored = data.getIgnored();
+                List<String> ignored = myself.getIgnored();
                 if (ignored.isEmpty()) {
                     player.sendMessage(CC.translate("&c你的黑名单中没有玩家"));
                     return;
                 }
-                player.sendMessage("&7&m------------------------");
-                player.sendMessage("&c黑名单列表: ");
+                player.sendMessage(CC.translate("&7&m------------------------"));
+                player.sendMessage(CC.translate("&c黑名单列表: "));
                 ignored.forEach(name -> {
-                    player.sendMessage("&7 - " + name);
+                    player.sendMessage(CC.translate("&7 - " + name));
                 });
-                player.sendMessage("&7&m------------------------");
+                player.sendMessage(CC.translate("&7&m------------------------"));
                 break;
         }
     }

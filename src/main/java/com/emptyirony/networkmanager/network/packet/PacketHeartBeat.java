@@ -28,6 +28,7 @@ public class PacketHeartBeat implements Packet {
         this.time = System.currentTimeMillis();
     }
 
+
     public PacketHeartBeat() {
     }
 

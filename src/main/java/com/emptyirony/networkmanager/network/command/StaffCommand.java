@@ -13,12 +13,12 @@ import org.bukkit.entity.Player;
 @CommandMeta(label = "staffmode", permission = "panshi.mod", async = true)
 public class StaffCommand {
     public void execute(Player player) {
-        PlayerData data = new PlayerData(player.getUniqueId());
-        if (data.isNotify()) {
-            data.setNotify(false);
+        PlayerData data = new PlayerData(player.getUniqueId()).load();
+        if (data.getStaffOption().isNotify()) {
+            data.getStaffOption().setNotify(false);
             player.sendMessage(CC.translate("&6员工详细信息已&c关闭"));
         } else {
-            data.setNotify(true);
+            data.getStaffOption().setNotify(true);
             player.sendMessage(CC.translate("&6员工详细信息已&a开启"));
         }
         data.save(false);

@@ -2,9 +2,11 @@ package com.emptyirony.networkmanager.network;
 
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.network.command.NetworkCommand;
+import com.emptyirony.networkmanager.network.command.StaffChat;
 import com.emptyirony.networkmanager.network.command.StaffCommand;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
+import com.emptyirony.networkmanager.network.packet.PacketFriendRequest;
 import com.emptyirony.networkmanager.network.packet.PacketHeartBeat;
 import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
 import lombok.SneakyThrows;
@@ -39,9 +41,11 @@ public class Network {
         System.out.println("已注册NetWork数据包监听器！");
         plugin.getPidgin().registerPacket(PacketHeartBeat.class);
         plugin.getPidgin().registerPacket(PacketStaffMsg.class);
+        plugin.getPidgin().registerPacket(PacketFriendRequest.class);
 
         Stone.get().getHoncho().registerCommand(new NetworkCommand());
         Stone.get().getHoncho().registerCommand(new StaffCommand());
+        Stone.get().getHoncho().registerCommand(new StaffChat());
         System.out.println("已注册NetWork指令！");
 
         new HeartBeatRunnable(SERVER_NAME).runTaskTimerAsynchronously(plugin, 20, 20);

@@ -1,6 +1,9 @@
 package com.emptyirony.networkmanager.data;
 
 import com.emptyirony.networkmanager.NetworkManager;
+import com.emptyirony.networkmanager.data.sub.PlayerOption;
+import com.emptyirony.networkmanager.data.sub.StaffOption;
+import com.emptyirony.networkmanager.data.sub.object.MsgType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mongodb.WriteConcern;
 import lombok.Data;
@@ -30,38 +33,19 @@ public class PlayerData {
     private List<String> ignored;
     private List<UUID> friends;
     private String lastMsg;
-    private boolean notify;
+    private StaffOption staffOption;
+    private PlayerOption playerOption;
 
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid.toString();
-        this.ignored = new ArrayList<>();
-        this.friends = new ArrayList<>();
-        this.notify = true;
-        load();
     }
 
-    private void load() {
-        if (this.uuid == null) {
-            throw new NullPointerException("你必须使用带有uuid的构造函数进行构造，空构造函数仅供反序列化使用");
+    public static PlayerData getByUuid(UUID uuid) {
+        if (cache.get(uuid) != null) {
+            return cache.get(uuid);
         }
-        UUID id = UUID.fromString(uuid);
-        if (cache.containsKey(id)) {
-            cache.get(id);
-            return;
-        }
-
-        PlayerData data = NetworkManager.getInstance().getMongoDB()
-                .getPlayerDataJacksonMongoCollection()
-                .find(DBQuery.is("uuid", this.uuid))
-                .first();
-
-        if (data == null) {
-            cache.put(id, this);
-            this.save(false);
-            return;
-        }
-        cache.put(id, data);
+        return new PlayerData(uuid).load();
     }
 
     public void save(boolean isQuit) {
@@ -78,5 +62,33 @@ public class PlayerData {
                 }
             }
         }.runTaskLaterAsynchronously(NetworkManager.getInstance(), 2L);
+    }
+
+    public PlayerData load() {
+        this.ignored = new ArrayList<>();
+        this.friends = new ArrayList<>();
+        this.staffOption = new StaffOption(true, 0);
+        this.playerOption = new PlayerOption(false, MsgType.Friend);
+
+        if (this.uuid == null) {
+            throw new NullPointerException("你必须使用带有uuid的构造函数进行构造，空构造函数仅供反序列化使用");
+        }
+        UUID id = UUID.fromString(uuid);
+        if (cache.containsKey(id)) {
+            return cache.get(id);
+        }
+
+        PlayerData data = NetworkManager.getInstance().getMongoDB()
+                .getPlayerDataJacksonMongoCollection()
+                .find(DBQuery.is("uuid", this.uuid))
+                .first();
+
+        if (data == null) {
+            cache.put(id, this);
+            this.save(false);
+            return this;
+        }
+        cache.put(id, data);
+        return data;
     }
 }

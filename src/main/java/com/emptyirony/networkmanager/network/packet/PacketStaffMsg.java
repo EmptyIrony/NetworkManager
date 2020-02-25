@@ -13,9 +13,9 @@ import lombok.Getter;
 public class PacketStaffMsg implements Packet {
     private String name;
     private String msg;
-    private String type;
+    private int type;
 
-    public PacketStaffMsg(String name, String msg, String type) {
+    public PacketStaffMsg(String name, String msg, int type) {
         this.name = name;
         this.msg = msg;
         this.type = type;
@@ -44,6 +44,6 @@ public class PacketStaffMsg implements Packet {
     public void deserialize(JsonObject object) {
         this.name = object.get("name").getAsString();
         this.msg = object.get("msg").getAsString();
-        this.type = object.get("type").getAsString();
+        this.type = object.get("type").getAsInt();
     }
 }

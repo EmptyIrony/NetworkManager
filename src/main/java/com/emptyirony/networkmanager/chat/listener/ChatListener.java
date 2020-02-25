@@ -3,6 +3,7 @@ package com.emptyirony.networkmanager.chat.listener;
 import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
+import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,6 +34,18 @@ public class ChatListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+        PlayerData data = PlayerData.getByUuid(player.getUniqueId());
+        if (data.getStaffOption().getStaffChat() == 1) {
+            PacketStaffMsg packet = new PacketStaffMsg(player.getDisplayName(), event.getMessage(), 0);
+            NetworkManager.getInstance().getPidgin().sendPacket(packet);
+            event.setCancelled(true);
+            return;
+        } else if (data.getStaffOption().getStaffChat() == 2) {
+            PacketStaffMsg packet = new PacketStaffMsg(player.getDisplayName(), event.getMessage(), 1);
+            NetworkManager.getInstance().getPidgin().sendPacket(packet);
+            event.setCancelled(true);
+            return;
+        }
 
         if (!player.hasPermission("panshi.famous")) {
             lastChat.putIfAbsent(player.getUniqueId(), new ArrayList<>());
@@ -57,10 +70,11 @@ public class ChatListener implements Listener {
 
         List<Player> ignored = new ArrayList<>();
         for (Player target : event.getRecipients()) {
-            PlayerData data = new PlayerData(target.getUniqueId());
-            if (data.getIgnored().contains(player.getName())) {
+            PlayerData targetData = new PlayerData(target.getUniqueId()).load();
+            if (targetData.getIgnored().contains(player.getName().toLowerCase())) {
                 ignored.add(target);
             }
+
         }
         event.getRecipients().removeAll(ignored);
 

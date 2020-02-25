@@ -17,7 +17,7 @@ public class DataListener implements Listener {
 
     @EventHandler
     public void onLogin(AsyncPlayerPreLoginEvent event) {
-        new PlayerData(event.getUniqueId());
+        new PlayerData(event.getUniqueId()).load();
     }
 
     @EventHandler
@@ -27,9 +27,9 @@ public class DataListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        PlayerData data = new PlayerData(event.getPlayer().getUniqueId());
+        PlayerData data = new PlayerData(event.getPlayer().getUniqueId()).load();
         if (event.getPlayer().hasPermission("panshi.mod")) {
-            if (data.isNotify()) {
+            if (data.getStaffOption().isNotify()) {
                 event.getPlayer().sendMessage(CC.translate("&6你的员工详细日志已&a开启&6，如需关闭请输入/staffmode"));
             }
         }

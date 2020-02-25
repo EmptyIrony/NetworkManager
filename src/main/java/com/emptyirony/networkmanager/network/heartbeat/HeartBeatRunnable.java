@@ -43,8 +43,8 @@ public class HeartBeatRunnable extends BukkitRunnable {
         dead.forEach(s -> {
             ServerInfo.getCache().remove(s);
             for (Player player : Bukkit.getOnlinePlayers()) {
-                PlayerData data = new PlayerData(player.getUniqueId());
-                if (data.isNotify() && player.hasPermission("panshi.mod")) {
+                PlayerData data = new PlayerData(player.getUniqueId()).load();
+                if (data.getStaffOption().isNotify() && player.hasPermission("panshi.mod")) {
                     player.sendMessage(CC.translate("&e[员工频道] &c" + "CONSOLE" + ": &f" + s + " 服务器离线了" + "&e(" + "ServerOffline" + ")"));
                 }
             }

@@ -16,7 +16,7 @@ import strafe.games.core.util.BungeeUtil;
 @CommandMeta(label = {"msg", "w", "t", "tell"}, async = true)
 public class MsgCommand {
     public void execute(Player player, String target, String msg) {
-        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid());
+        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid()).load();
         boolean online = ServerInfo.isPlayerOnline(target);
         if (!online) {
             player.sendMessage(CC.translate("&c那名玩家不在线！"));
