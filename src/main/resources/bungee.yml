@@ -1,0 +1,4 @@
+name: BungeeNetwork
+main: com.emptyirony.networkmanager.bungee.BungeeNetwork
+verison: 1.0
+author: EmptyIrony

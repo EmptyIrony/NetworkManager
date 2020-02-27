@@ -8,8 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mongodb.WriteConcern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mongojack.DBQuery;
+import strafe.games.core.profile.Profile;
+import strafe.games.core.util.callback.TypeCallback;
 
 import java.util.*;
 
@@ -30,11 +33,13 @@ public class PlayerData {
 
     private String uuid;
     private String name;
-    private List<String> ignored;
-    private List<UUID> friends;
+    private List<String> ignored = new ArrayList<>();
+    private Set<String> friends = new HashSet<>();
     private String lastMsg;
-    private StaffOption staffOption;
-    private PlayerOption playerOption;
+    private StaffOption staffOption = new StaffOption(true, 0);
+    private PlayerOption playerOption = new PlayerOption(false, MsgType.Friend);
+    private boolean isNick;
+    private String nickedName;
 
 
     public PlayerData(UUID uuid) {
@@ -64,11 +69,17 @@ public class PlayerData {
         }.runTaskLaterAsynchronously(NetworkManager.getInstance(), 2L);
     }
 
+    public void isFriend(String name, TypeCallback<Boolean> callback) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Profile profile = Profile.getByUsername(name);
+                callback.callback(friends.contains(profile.getUuid().toString()));
+            }
+        }.runTaskAsynchronously(NetworkManager.getInstance());
+    }
+
     public PlayerData load() {
-        this.ignored = new ArrayList<>();
-        this.friends = new ArrayList<>();
-        this.staffOption = new StaffOption(true, 0);
-        this.playerOption = new PlayerOption(false, MsgType.Friend);
 
         if (this.uuid == null) {
             throw new NullPointerException("你必须使用带有uuid的构造函数进行构造，空构造函数仅供反序列化使用");
@@ -76,6 +87,10 @@ public class PlayerData {
         UUID id = UUID.fromString(uuid);
         if (cache.containsKey(id)) {
             return cache.get(id);
+        }
+
+        if (Bukkit.isPrimaryThread()) {
+            throw new RuntimeException("那名玩家不在该服务器上，无法找到那名玩家的缓存，你必须异步获取玩家档案");
         }
 
         PlayerData data = NetworkManager.getInstance().getMongoDB()

@@ -1,4 +1,4 @@
-package com.emptyirony.networkmanager.network.packet;
+package com.emptyirony.networkmanager.packet;
 
 import com.google.gson.JsonObject;
 import com.minexd.pidgin.packet.Packet;
@@ -23,6 +23,9 @@ public class PacketFriendRequest implements Packet {
         this.time = System.currentTimeMillis();
     }
 
+    public PacketFriendRequest() {
+    }
+
     @Override
     public int id() {
         return 52;
@@ -42,7 +45,7 @@ public class PacketFriendRequest implements Packet {
     @Override
     public void deserialize(JsonObject object) {
         this.name = object.get("name").getAsString();
-        this.target = object.get("name").getAsString();
+        this.target = object.get("target").getAsString();
         this.force = object.get("force").getAsBoolean();
         this.time = object.get("time").getAsLong();
     }

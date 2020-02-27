@@ -1,14 +1,17 @@
 package com.emptyirony.networkmanager.network;
 
 import com.emptyirony.networkmanager.NetworkManager;
+import com.emptyirony.networkmanager.friend.Friend;
 import com.emptyirony.networkmanager.network.command.NetworkCommand;
+import com.emptyirony.networkmanager.network.command.NickCommand;
 import com.emptyirony.networkmanager.network.command.StaffChat;
 import com.emptyirony.networkmanager.network.command.StaffCommand;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
-import com.emptyirony.networkmanager.network.packet.PacketFriendRequest;
-import com.emptyirony.networkmanager.network.packet.PacketHeartBeat;
-import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
+import com.emptyirony.networkmanager.packet.PacketFriendRequest;
+import com.emptyirony.networkmanager.packet.PacketHeartBeat;
+import com.emptyirony.networkmanager.packet.PacketStaffMsg;
+import com.emptyirony.networkmanager.packet.PacketStaffSwitchServer;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import strafe.games.core.Stone;
@@ -22,6 +25,7 @@ import static java.lang.Thread.sleep;
  */
 public class Network {
     public static String SERVER_NAME;
+    private Friend friend;
 
     @SneakyThrows
     public Network() {
@@ -33,6 +37,7 @@ public class Network {
             sleep(1000 * 5);
             Bukkit.shutdown();
         }
+        NetworkManager.getInstance().setServerType(SERVER_NAME.split("_")[0].equalsIgnoreCase("hub") ? 0 : 1);
 
 
         System.out.println("已注册NetWork数据包！");
@@ -42,13 +47,19 @@ public class Network {
         plugin.getPidgin().registerPacket(PacketHeartBeat.class);
         plugin.getPidgin().registerPacket(PacketStaffMsg.class);
         plugin.getPidgin().registerPacket(PacketFriendRequest.class);
+        plugin.getPidgin().registerPacket(PacketStaffSwitchServer.class);
 
         Stone.get().getHoncho().registerCommand(new NetworkCommand());
         Stone.get().getHoncho().registerCommand(new StaffCommand());
         Stone.get().getHoncho().registerCommand(new StaffChat());
+        Stone.get().getHoncho().registerCommand(new NickCommand());
         System.out.println("已注册NetWork指令！");
 
         new HeartBeatRunnable(SERVER_NAME).runTaskTimerAsynchronously(plugin, 20, 20);
         System.out.println("心跳活动开始");
+
+        System.out.println("好友系统开始初始化...");
+        this.friend = new Friend();
+        System.out.println("好友系统初始化完成！");
     }
 }

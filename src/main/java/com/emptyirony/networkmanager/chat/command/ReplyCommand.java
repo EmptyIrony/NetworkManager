@@ -4,39 +4,40 @@ import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
 import com.qrakn.honcho.command.CommandMeta;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import strafe.games.core.profile.Profile;
 import strafe.games.core.util.BungeeUtil;
-import strafe.games.core.util.Cooldown;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * 2 * @Author: EmptyIrony
- * 3 * @Date: 2020/2/24 10:02
+ * 3 * @Date: 2020/2/26 21:22
  * 4
  */
-@CommandMeta(label = {"msg", "w", "t", "tell"}, async = true)
-public class MsgCommand {
-    @Getter
-    private static Map<UUID, Cooldown> cooldownMap = new HashMap<>();
 
-    public void execute(Player player, String target, String msg) {
-        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid()).load();
+@CommandMeta(label = {"reply", "r"}, async = true)
+public class ReplyCommand {
+    public void execute(Player player, String msg) {
+        PlayerData data = PlayerData.getByUuid(player.getUniqueId());
+        if (data.getLastMsg() == null) {
+            player.sendMessage(CC.translate("&c你没有玩家可以回复"));
+            return;
+        }
+
+        String target = data.getLastMsg();
         boolean online = ServerInfo.isPlayerOnline(target);
         if (!online) {
-            player.sendMessage(CC.translate("&c那名玩家不在线！"));
+            player.sendMessage(CC.translate("&c对方不在线！"));
             return;
         }
-        if (data.getIgnored().contains(player.getName().toLowerCase())) {
-            player.sendMessage(CC.translate("&c那名玩家把你拉黑了"));
-            return;
-        }
-        if (cooldownMap.containsKey(player.getUniqueId()) && !cooldownMap.get(player.getUniqueId()).hasExpired()) {
+        if (MsgCommand.getCooldownMap().containsKey(player.getUniqueId()) && !MsgCommand.getCooldownMap().get(player.getUniqueId()).hasExpired()) {
             player.sendMessage(CC.translate("&c请不要使用私聊刷屏"));
+            return;
+        }
+
+        Profile profile = Profile.getByUsername(target);
+        PlayerData targetData = PlayerData.getByUuid(profile.getUuid());
+        if (targetData.getIgnored().contains(player.getName().toLowerCase())) {
+            player.sendMessage(CC.translate("&c那名玩家把你拉黑了"));
             return;
         }
 
@@ -45,9 +46,9 @@ public class MsgCommand {
             BungeeUtil.sendMessage(player, target, CC.translate("&d玩家 &b" + player.getName() + "&d 私聊了你，但是为了防止直播事故，我们已将其屏蔽"));
             return;
         }
-        data.setLastMsg(player.getName());
-        cooldownMap.put(player.getUniqueId(), new Cooldown(1000));
-        data.isFriend(target, isFriend -> {
+
+        targetData.setLastMsg(player.getName());
+        targetData.isFriend(player.getName(), isFriend -> {
             if (isFriend) {
                 player.sendMessage(CC.translate("&d" + player.getDisplayName() + "➦&7: " + msg));
                 BungeeUtil.sendMessage(player, target, CC.translate("&d" + player.getDisplayName() + "➥&7: " + msg));
@@ -55,6 +56,6 @@ public class MsgCommand {
                 player.sendMessage(CC.translate("&c你需要先添加对方为好友才可以私聊！"));
             }
         });
-        data.save(false);
+        targetData.save(false);
     }
 }

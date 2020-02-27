@@ -29,7 +29,12 @@ public class ServerInfo {
     }
 
     public static ServerInfo getServerByName(String name) {
-        return cache.get(name);
+        for (String server : cache.keySet()) {
+            if (cache.get(server).getPlayers().contains(name)) {
+                return cache.get(server);
+            }
+        }
+        return null;
     }
 
     public static boolean isPlayerOnline(String name) {
@@ -45,5 +50,16 @@ public class ServerInfo {
 
     public static Map<String, ServerInfo> getCache() {
         return cache;
+    }
+
+    public static String getPlayerServer(String player) {
+        for (String s : cache.keySet()) {
+            for (String p : cache.get(s).getPlayers()) {
+                if (p.equalsIgnoreCase(player)) {
+                    return s;
+                }
+            }
+        }
+        return null;
     }
 }

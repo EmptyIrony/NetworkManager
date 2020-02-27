@@ -3,7 +3,7 @@ package com.emptyirony.networkmanager.network.command;
 import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
-import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
+import com.emptyirony.networkmanager.packet.PacketStaffMsg;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
 

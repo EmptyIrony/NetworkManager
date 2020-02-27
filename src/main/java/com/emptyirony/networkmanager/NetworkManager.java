@@ -2,12 +2,15 @@ package com.emptyirony.networkmanager;
 
 import com.emptyirony.networkmanager.chat.command.IgnoreCommand;
 import com.emptyirony.networkmanager.chat.command.MsgCommand;
+import com.emptyirony.networkmanager.chat.command.ReplyCommand;
+import com.emptyirony.networkmanager.chat.command.StreamCommand;
 import com.emptyirony.networkmanager.chat.listener.ChatListener;
 import com.emptyirony.networkmanager.data.listener.DataListener;
 import com.emptyirony.networkmanager.database.MongoDB;
 import com.emptyirony.networkmanager.network.Network;
 import com.minexd.pidgin.Pidgin;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import strafe.games.core.Stone;
@@ -21,6 +24,9 @@ public final class NetworkManager extends JavaPlugin {
     private MongoDB mongoDB;
     @Getter
     private Pidgin pidgin;
+    @Getter
+    @Setter
+    private int serverType;
 
     @Override
     public void onEnable() {
@@ -44,6 +50,8 @@ public final class NetworkManager extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), NetworkManager.getInstance());
         Stone.get().getHoncho().registerCommand(new IgnoreCommand());
         Stone.get().getHoncho().registerCommand(new MsgCommand());
+        Stone.get().getHoncho().registerCommand(new ReplyCommand());
+        Stone.get().getHoncho().registerCommand(new StreamCommand());
         System.out.println("聊天系统初始完成");
     }
 

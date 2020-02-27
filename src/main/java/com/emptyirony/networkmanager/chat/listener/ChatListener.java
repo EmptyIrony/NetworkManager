@@ -3,7 +3,7 @@ package com.emptyirony.networkmanager.chat.listener;
 import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
-import com.emptyirony.networkmanager.network.packet.PacketStaffMsg;
+import com.emptyirony.networkmanager.packet.PacketStaffMsg;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,10 +71,9 @@ public class ChatListener implements Listener {
         List<Player> ignored = new ArrayList<>();
         for (Player target : event.getRecipients()) {
             PlayerData targetData = new PlayerData(target.getUniqueId()).load();
-            if (targetData.getIgnored().contains(player.getName().toLowerCase())) {
+            if (targetData.getIgnored().contains(player.getName().toLowerCase()) || targetData.getPlayerOption().isStream() && !player.hasPermission("panshi.admin")) {
                 ignored.add(target);
             }
-
         }
         event.getRecipients().removeAll(ignored);
 

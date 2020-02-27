@@ -1,4 +1,4 @@
-package com.emptyirony.networkmanager.network.packet;
+package com.emptyirony.networkmanager.packet;
 
 import com.google.gson.JsonObject;
 import com.minexd.pidgin.packet.Packet;

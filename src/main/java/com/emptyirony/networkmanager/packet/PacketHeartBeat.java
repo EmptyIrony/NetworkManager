@@ -1,8 +1,9 @@
-package com.emptyirony.networkmanager.network.packet;
+package com.emptyirony.networkmanager.packet;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.minexd.pidgin.packet.Packet;
 import lombok.Getter;
 
@@ -45,7 +46,7 @@ public class PacketHeartBeat implements Packet {
         json.addProperty("time", time);
         JsonArray array = new JsonArray();
         for (String player : onlinePlayers) {
-            array.add(player);
+            array.add(new JsonPrimitive(player));
         }
         json.add("online", array);
         return json;
