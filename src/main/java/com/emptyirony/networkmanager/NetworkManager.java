@@ -13,20 +13,21 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import strafe.games.core.Stone;
 
+@Getter
 public final class NetworkManager extends JavaPlugin {
     @Getter
     private static NetworkManager instance;
-    @Getter
     private Network network;
-    @Getter
     private MongoDB mongoDB;
-    @Getter
+    private boolean canJoin;
     private Pidgin pidgin;
     @Getter
     @Setter
     private int serverType;
+
 
     @Override
     public void onEnable() {
@@ -35,6 +36,14 @@ public final class NetworkManager extends JavaPlugin {
         this.network = new Network();
         initDatabase();
         initChat();
+        canJoin = false;
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                canJoin = true;
+            }
+        }.runTaskLater(this, 20 * 5);
     }
 
     private void initDatabase() {

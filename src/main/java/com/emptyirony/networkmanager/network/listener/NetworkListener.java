@@ -1,6 +1,5 @@
 package com.emptyirony.networkmanager.network.listener;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.friend.data.FriendData;
@@ -18,6 +17,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import strafe.games.core.util.BungeeUtil;
+import strafe.games.core.util.CC;
 import strafe.games.core.util.ChatComponentBuilder;
 
 import java.util.List;

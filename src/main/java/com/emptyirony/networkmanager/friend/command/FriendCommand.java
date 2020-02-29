@@ -1,6 +1,5 @@
 package com.emptyirony.networkmanager.friend.command;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.friend.data.FriendData;
@@ -10,6 +9,7 @@ import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
 import strafe.games.core.profile.Profile;
 import strafe.games.core.util.BungeeUtil;
+import strafe.games.core.util.CC;
 
 import java.util.HashMap;
 import java.util.List;
@@ -188,11 +188,11 @@ public class FriendCommand {
                 break;
             }
             String name = Profile.getByUuid(friendsList.get(i)).getName();
-            ServerInfo server = ServerInfo.getServerByName(name);
+            String server = ServerInfo.getPlayerServer(name);
             if (server == null) {
                 friends.put(name, "离线");
             } else {
-                String[] split = server.getServerName().split("_");
+                String[] split = server.split("_");
                 String s = split[0];
                 String gameName = split[1];
                 friends.put(name, s + "_" + gameName);

@@ -1,6 +1,5 @@
 package com.emptyirony.networkmanager.network.heartbeat;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
@@ -10,6 +9,7 @@ import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import strafe.games.core.util.CC;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.emptyirony.networkmanager.network.command;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
+import strafe.games.core.util.CC;
 
 /**
  * 2 * @Author: EmptyIrony

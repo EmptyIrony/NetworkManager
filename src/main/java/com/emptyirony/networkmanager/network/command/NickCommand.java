@@ -5,7 +5,9 @@ import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.util.bookutils.NMSBookBuilder;
 import com.emptyirony.networkmanager.util.bookutils.NMSBookUtils;
 import com.emptyirony.networkmanager.util.signutils.SignGUI;
+import com.mojang.authlib.GameProfile;
 import com.qrakn.honcho.command.CommandMeta;
+import lombok.SneakyThrows;
 import lombok.val;
 import me.neznamy.tab.api.TABAPI;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -21,15 +23,16 @@ import org.bukkit.entity.Player;
 import strafe.games.core.profile.Profile;
 import strafe.games.core.util.CC;
 
+import java.lang.reflect.Field;
+
 /**
  * 2 * @Author: EmptyIrony
  * 3 * @Date: 2020/2/26 14:39
  * 4
  */
-@CommandMeta(label = "nick")
+@CommandMeta(label = "nick", async = true)
 public class NickCommand {
     public void execute(Player player) {
-        val profile = Profile.getByUuid(player.getUniqueId());
         if (NetworkManager.getInstance().getServerType() != 0) {
             player.sendMessage(CC.translate("&c您只能在大厅使用该指令！"));
             return;
@@ -37,7 +40,7 @@ public class NickCommand {
         PlayerData data = PlayerData.getByUuid(player.getUniqueId());
 
         if (data.isNick()) {
-            nick(player, ((CraftPlayer) player).getRealName());
+            nick(player, data.getName());
             data.setNick(false);
             return;
         }
@@ -180,8 +183,12 @@ public class NickCommand {
     }
 
 
+    @SneakyThrows
     private void nick(Player player, String id) {
-        ((CraftPlayer) player).setNickName(id);
+        Field name = GameProfile.class.getDeclaredField("name");
+        CraftPlayer ePlayer = ((CraftPlayer) player);
+        name.setAccessible(true);
+        name.set(ePlayer.getProfile(), id);
         TABAPI.setCustomTabNameTemporarily(player.getUniqueId(), player.getDisplayName());
 
         PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(player.getEntityId());
@@ -190,14 +197,13 @@ public class NickCommand {
         PacketPlayOutNamedEntitySpawn spawn = new PacketPlayOutNamedEntitySpawn(entityPlayer);
 
         for (Player target : Bukkit.getOnlinePlayers()) {
-            if (target.equals(player)) {
-                continue;
+            if (!target.equals(player)) {
+                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(destroy);
+                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(playerInfo);
+                playerInfo = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(spawn);
+                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(playerInfo);
             }
-            ((CraftPlayer) target).getHandle().playerConnection.sendPacket(destroy);
-            ((CraftPlayer) target).getHandle().playerConnection.sendPacket(playerInfo);
-            playerInfo = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
-            ((CraftPlayer) target).getHandle().playerConnection.sendPacket(spawn);
-            ((CraftPlayer) target).getHandle().playerConnection.sendPacket(playerInfo);
         }
     }
 }

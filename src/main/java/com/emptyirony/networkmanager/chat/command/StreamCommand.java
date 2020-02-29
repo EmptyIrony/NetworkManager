@@ -1,9 +1,9 @@
 package com.emptyirony.networkmanager.chat.command;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
+import strafe.games.core.util.CC;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class StreamCommand {
     public void execute(Player player) {
         PlayerData data = PlayerData.getByUuid(player.getUniqueId());
-        if (data.getPlayerOption().isStream() && !player.hasPermission("panshi.admin")) {
+        if (data.getPlayerOption().isStream()) {
             data.getPlayerOption().setStream(false);
             player.sendMessage(CC.translate("&a你已退出直播模式，请注意其他玩家私聊发送给你的&c不良信息&a！"));
         } else {

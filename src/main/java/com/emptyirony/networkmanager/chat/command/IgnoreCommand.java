@@ -1,9 +1,9 @@
 package com.emptyirony.networkmanager.chat.command;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.qrakn.honcho.command.CommandMeta;
 import org.bukkit.entity.Player;
+import strafe.games.core.util.CC;
 
 import java.util.List;
 

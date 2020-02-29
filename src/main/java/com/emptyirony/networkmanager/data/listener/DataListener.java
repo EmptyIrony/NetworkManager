@@ -1,7 +1,9 @@
 package com.emptyirony.networkmanager.data.listener;
 
-import cn.panshi.spigot.util.CC;
+import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
+import com.mojang.authlib.GameProfile;
+import lombok.SneakyThrows;
 import me.neznamy.tab.api.TABAPI;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
@@ -14,7 +16,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import strafe.games.core.util.CC;
+
+import java.lang.reflect.Field;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -25,7 +31,12 @@ public class DataListener implements Listener {
 
     @EventHandler
     public void onLogin(AsyncPlayerPreLoginEvent event) {
-        new PlayerData(event.getUniqueId()).load();
+        if (NetworkManager.getInstance().isCanJoin()) {
+            new PlayerData(event.getUniqueId()).load();
+        } else {
+            event.setResult(PlayerPreLoginEvent.Result.KICK_BANNED);
+            event.setKickMessage(CC.translate("&c服务器仍在启动中..."));
+        }
     }
 
     @EventHandler
@@ -46,8 +57,12 @@ public class DataListener implements Listener {
         }
     }
 
+    @SneakyThrows
     private void nick(Player player, String id) {
-        ((CraftPlayer) player).setNickName(id);
+        Field name = GameProfile.class.getDeclaredField("name");
+        CraftPlayer ePlayer = ((CraftPlayer) player);
+        name.setAccessible(true);
+        name.set(ePlayer.getProfile(), id);
         TABAPI.setCustomTabNameTemporarily(player.getUniqueId(), player.getDisplayName());
 
         PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(player.getEntityId());

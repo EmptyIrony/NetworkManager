@@ -1,6 +1,7 @@
 package com.emptyirony.networkmanager.data;
 
 import com.emptyirony.networkmanager.NetworkManager;
+import com.emptyirony.networkmanager.data.sub.GuildData;
 import com.emptyirony.networkmanager.data.sub.PlayerOption;
 import com.emptyirony.networkmanager.data.sub.StaffOption;
 import com.emptyirony.networkmanager.data.sub.object.MsgType;
@@ -40,6 +41,7 @@ public class PlayerData {
     private PlayerOption playerOption = new PlayerOption(false, MsgType.Friend);
     private boolean isNick;
     private String nickedName;
+    private GuildData guildData;
 
 
     public PlayerData(UUID uuid) {

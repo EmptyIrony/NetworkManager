@@ -1,6 +1,5 @@
 package com.emptyirony.networkmanager.chat.listener;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.packet.PacketStaffMsg;
@@ -9,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import strafe.games.core.util.CC;
 import strafe.games.core.util.ChatComponentBuilder;
 import strafe.games.core.util.Cooldown;
 

@@ -1,6 +1,5 @@
 package com.emptyirony.networkmanager.chat.command;
 
-import cn.panshi.spigot.util.CC;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
 import com.qrakn.honcho.command.CommandMeta;
@@ -8,6 +7,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import strafe.games.core.profile.Profile;
 import strafe.games.core.util.BungeeUtil;
+import strafe.games.core.util.CC;
 import strafe.games.core.util.Cooldown;
 
 import java.util.HashMap;
