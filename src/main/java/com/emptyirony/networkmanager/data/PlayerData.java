@@ -33,7 +33,6 @@ public class PlayerData {
     }
 
     private String uuid;
-    private String name;
     private List<String> ignored = new ArrayList<>();
     private Set<String> friends = new HashSet<>();
     private String lastMsg;
@@ -71,12 +70,15 @@ public class PlayerData {
         }.runTaskLaterAsynchronously(NetworkManager.getInstance(), 2L);
     }
 
-    public void isFriend(String name, TypeCallback<Boolean> callback) {
+    public void isFriend(String myself, String targetName, TypeCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Profile profile = Profile.getByUsername(name);
-                callback.callback(friends.contains(profile.getUuid().toString()));
+                Profile profile = Profile.getByUsername(myself);
+                PlayerData data = PlayerData.getByUuid(profile.getUuid());
+
+                Profile targetProfile = Profile.getByUsername(targetName);
+                callback.callback(data.getFriends().contains(targetProfile.getUuid().toString()));
             }
         }.runTaskAsynchronously(NetworkManager.getInstance());
     }

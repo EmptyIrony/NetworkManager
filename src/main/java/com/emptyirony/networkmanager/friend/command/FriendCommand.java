@@ -11,10 +11,7 @@ import strafe.games.core.profile.Profile;
 import strafe.games.core.util.BungeeUtil;
 import strafe.games.core.util.CC;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -124,7 +121,7 @@ public class FriendCommand {
                     return;
                 }
                 PlayerData data = PlayerData.getByUuid(player.getUniqueId());
-                if (data.getFriends().size() / 8 > page - 1) {
+                if (data.getFriends().size() / 8 < page - 1) {
                     player.sendMessage(CC.translate("&c你输入的数字超过你的好友列表页数！"));
                     return;
                 }
@@ -178,11 +175,15 @@ public class FriendCommand {
 
         PacketFriendRequest packet = new PacketFriendRequest(player.getName(), target, false);
         NetworkManager.getInstance().getPidgin().sendPacket(packet);
-        System.out.println("sent a packet");
     }
 
     private void checkFriendList(Player player, List<UUID> friendsList, int page) {
         Map<String, String> friends = new HashMap<>();
+        friendsList = friendsList.stream().sorted(Comparator.comparing(uuid -> {
+            String name = Profile.getByUuid((UUID) uuid).getName();
+            return ServerInfo.isPlayerOnline(name) ? 1 : 0;
+        }).reversed()).collect(Collectors.toList());
+
         for (int i = page * 8; i < 8 + page * 8; i++) {
             if (friendsList.size() <= i) {
                 break;

@@ -2,6 +2,7 @@ package com.emptyirony.networkmanager.bungee.command;
 
 import com.emptyirony.networkmanager.bungee.BungeeNetwork;
 import com.emptyirony.networkmanager.bungee.data.LoginData;
+import com.emptyirony.networkmanager.bungee.util.CC;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -28,6 +29,14 @@ public class RejoinCommand extends Command {
         LoginData data = LoginData.getByUuid(player.getUniqueId());
         if (data.getLastGame() != null && !data.getLastGame().equals("UNKNOW")) {
             String server = data.getLastGame();
+            if (player.getServer().getInfo().getName().equalsIgnoreCase(data.getLastGame())) {
+                player.sendMessage(CC.translate("&c你已经在该服务器上了"));
+                return;
+            }
+            if (player.getServer().getInfo().getName().split("_")[0].equalsIgnoreCase("games")) {
+                player.sendMessage(CC.translate("&c你已经在该服务器上了"));
+                return;
+            }
             player.connect(BungeeNetwork.getInstance().getProxy().getServerInfo(server), (done, throwable) -> {
                 if (!done) {
                     player.connect(BungeeNetwork.getInstance().getProxy().getServerInfo(data.getLastLobby()));

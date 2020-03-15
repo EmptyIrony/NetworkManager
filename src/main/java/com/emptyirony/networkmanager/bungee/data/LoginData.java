@@ -17,10 +17,11 @@ import java.util.UUID;
  * 4
  */
 @Data
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class LoginData {
     private static Map<UUID, LoginData> cache = new HashMap<>();
+    private String _id;
     private String uuid;
     private String lastLobby;
     private String lastGame;

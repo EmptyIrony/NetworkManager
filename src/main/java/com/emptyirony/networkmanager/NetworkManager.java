@@ -14,12 +14,18 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.inventivetalent.nicknamer.command.GeneralCommands;
+import org.inventivetalent.nicknamer.command.NickCommands;
+import org.inventivetalent.nicknamer.command.SkinCommands;
 import strafe.games.core.Stone;
 
 @Getter
-public final class NetworkManager extends JavaPlugin {
+public class NetworkManager extends JavaPlugin {
     @Getter
     private static NetworkManager instance;
+    @Getter
+    @Deprecated
+    private static NetworkManager ins;
     private Network network;
     private MongoDB mongoDB;
     private boolean canJoin;
@@ -28,10 +34,15 @@ public final class NetworkManager extends JavaPlugin {
     @Setter
     private int serverType;
 
+    public GeneralCommands generalCommands;
+    public NickCommands nickCommands;
+    public SkinCommands skinCommands;
+
 
     @Override
     public void onEnable() {
         instance = this;
+        ins = this;
         loadRedis();
         this.network = new Network();
         initDatabase();
@@ -69,4 +80,5 @@ public final class NetworkManager extends JavaPlugin {
         this.pidgin = new Pidgin("network", "127.0.01", 6379, "");
         System.out.println("successfully connected Redis!");
     }
+
 }

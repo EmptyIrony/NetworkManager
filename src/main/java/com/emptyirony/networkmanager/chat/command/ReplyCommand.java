@@ -48,9 +48,9 @@ public class ReplyCommand {
         }
 
         targetData.setLastMsg(player.getName());
-        targetData.isFriend(player.getName(), isFriend -> {
+        targetData.isFriend(player.getName(), target, isFriend -> {
             if (isFriend) {
-                player.sendMessage(CC.translate("&d" + player.getDisplayName() + "➦&7: " + msg));
+                player.sendMessage(CC.translate("&d" + target + "➦&7: " + msg));
                 BungeeUtil.sendMessage(player, target, CC.translate("&d" + player.getDisplayName() + "➥&7: " + msg));
             } else {
                 player.sendMessage(CC.translate("&c你需要先添加对方为好友才可以私聊！"));

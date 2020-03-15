@@ -27,6 +27,7 @@ public class ModInfo {
         this.name = name;
         this.mods = mods;
 
+        System.out.println("recive a mods info");
         cache.put(uuid, this);
     }
 }

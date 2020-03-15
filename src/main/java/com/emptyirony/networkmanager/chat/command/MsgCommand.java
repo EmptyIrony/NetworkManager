@@ -25,12 +25,13 @@ public class MsgCommand {
     private static Map<UUID, Cooldown> cooldownMap = new HashMap<>();
 
     public void execute(Player player, String target, String msg) {
-        PlayerData data = new PlayerData(Profile.getByUsername(target).getUuid()).load();
         boolean online = ServerInfo.isPlayerOnline(target);
         if (!online) {
             player.sendMessage(CC.translate("&c那名玩家不在线！"));
             return;
         }
+        Profile profile = Profile.getByUsername(target);
+        PlayerData data = PlayerData.getByUuid(profile.getUuid());
         if (data.getIgnored().contains(player.getName().toLowerCase())) {
             player.sendMessage(CC.translate("&c那名玩家把你拉黑了"));
             return;
@@ -47,9 +48,9 @@ public class MsgCommand {
         }
         data.setLastMsg(player.getName());
         cooldownMap.put(player.getUniqueId(), new Cooldown(1000));
-        data.isFriend(target, isFriend -> {
+        data.isFriend(player.getName(), target, isFriend -> {
             if (isFriend) {
-                player.sendMessage(CC.translate("&d" + player.getDisplayName() + "➦&7: " + msg));
+                player.sendMessage(CC.translate("&d" + target + "➦&7: " + msg));
                 BungeeUtil.sendMessage(player, target, CC.translate("&d" + player.getDisplayName() + "➥&7: " + msg));
             } else {
                 player.sendMessage(CC.translate("&c你需要先添加对方为好友才可以私聊！"));

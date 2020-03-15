@@ -28,7 +28,7 @@ public class ModsCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("urbane.mod")) {
+        if (!sender.hasPermission("panshi.mod")) {
             return;
         }
 

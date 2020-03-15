@@ -4,7 +4,6 @@ import com.emptyirony.networkmanager.bungee.data.ModInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,22 +15,14 @@ import java.util.Map;
  * 4
  */
 public class MessageListener implements Listener {
-    @EventHandler
+//    @EventHandler
     public void onMessage(PluginMessageEvent event) {
         byte[] bytes = event.getData();
-        if (bytes != null) {
+        if (bytes.length != 0) {
             if (bytes[0] == 2) {
                 Map<String, String> mods = getModData(bytes);
                 ProxiedPlayer player = (ProxiedPlayer) event.getSender();
                 new ModInfo(player.getUniqueId(), player.getName(), mods);
-
-//                boolean illegal = false;
-//                String bMod = "";
-//
-//
-//                if (illegal){
-//                    player.disconnect(new ComponentBuilder("您正在使用黑名单模组："+bMod+"，请删除后再重新尝试加入服务器").create());
-//                }
             }
         }
     }

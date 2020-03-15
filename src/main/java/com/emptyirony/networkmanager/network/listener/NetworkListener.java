@@ -3,11 +3,9 @@ package com.emptyirony.networkmanager.network.listener;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.friend.data.FriendData;
+import com.emptyirony.networkmanager.network.Network;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
-import com.emptyirony.networkmanager.packet.PacketFriendRequest;
-import com.emptyirony.networkmanager.packet.PacketHeartBeat;
-import com.emptyirony.networkmanager.packet.PacketStaffMsg;
-import com.emptyirony.networkmanager.packet.PacketStaffSwitchServer;
+import com.emptyirony.networkmanager.packet.*;
 import com.minexd.pidgin.packet.handler.IncomingPacketHandler;
 import com.minexd.pidgin.packet.listener.PacketListener;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -16,6 +14,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import strafe.games.core.profile.Profile;
 import strafe.games.core.util.BungeeUtil;
 import strafe.games.core.util.CC;
 import strafe.games.core.util.ChatComponentBuilder;
@@ -46,7 +46,7 @@ public class NetworkListener implements PacketListener {
             }
         }
 
-        new ServerInfo(packet.getName(), packet.getOnlinePlayers(), packet.getMotd(), packet.getTime());
+        new ServerInfo(packet.getName(), packet.getOnlinePlayers(), packet.getMotd(), packet.getTime(), packet.getTps());
     }
 
     @IncomingPacketHandler
@@ -72,10 +72,8 @@ public class NetworkListener implements PacketListener {
             builder.append(CC.translate(packet.getPlayer() + "&e 从 &3" + packet.getFrom() + "&e 离线了&e(员工追踪)"));
         } else if (packet.getType() == 1) {
             builder.append(CC.translate(packet.getPlayer() + "&e 从 &3" + packet.getTo() + "&e 上线了&e(员工追踪)"));
-        } else if (packet.getType() == 2) {
-            builder.append(CC.translate(packet.getPlayer() + "&e 从 &3" + packet.getFrom() + "&e 更变到&3 " + packet.getTo() + " &e(员工追踪)"));
         }
-        List<? extends Player> players = Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission("panshi.modd") && PlayerData.getByUuid(player.getUniqueId()).getStaffOption().isNotify()).collect(Collectors.toList());
+        List<? extends Player> players = Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission("panshi.mod") && PlayerData.getByUuid(player.getUniqueId()).getStaffOption().isNotify()).collect(Collectors.toList());
         players.forEach(player -> {
             player.sendMessage(builder.toString());
         });
@@ -115,5 +113,47 @@ public class NetworkListener implements PacketListener {
         player.sendMessage(CC.translate("&e" + packet.getName() + " 申请加您为好友"));
         player.spigot().sendMessage(clickMsg);
         player.sendMessage(CC.translate("&9&m---------------------------------------------"));
+    }
+
+    @IncomingPacketHandler
+    public void onShutdownRequest(PacketServerShutdown packet) {
+        if (Network.SERVER_NAME.equalsIgnoreCase(packet.getServer())) {
+            if (!NetworkManager.getInstance().getNetwork().isShutDowning()) {
+                NetworkManager.getInstance().getNetwork().setShutDowning(true);
+                Bukkit.broadcastMessage(CC.translate("&6&m---------------------------------------------"));
+                Bukkit.broadcastMessage(CC.translate("&c本服将在 &e" + packet.getDelay() + "&c 秒后重启"));
+                Bukkit.broadcastMessage(CC.translate("&c执行管理: &e" + packet.getPlayer()));
+                Bukkit.broadcastMessage(CC.translate("&c执行原因: &e" + packet.getReason()));
+                Bukkit.broadcastMessage(CC.translate("&6&m---------------------------------------------"));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Bukkit.shutdown();
+                    }
+                }.runTaskLater(NetworkManager.getInstance(), 20 * packet.getDelay());
+            }
+        }
+    }
+
+    @IncomingPacketHandler
+    public void onPlayerJoinOrQuit(PacketPlayerJoinOrQuit packet) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                String name = packet.getName();
+                boolean join = packet.isJoin();
+                Profile profile = Profile.getByUsername(name);
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    PlayerData data = PlayerData.getByUuid(player.getUniqueId());
+                    if (data.getFriends().contains(profile.getUuid().toString())) {
+                        if (join) {
+                            player.sendMessage(CC.translate("&e" + name + " 加入了服务器"));
+                        } else {
+                            player.sendMessage(CC.translate("&e" + name + " 离开了服务器"));
+                        }
+                    }
+                }
+            }
+        }.runTaskAsynchronously(NetworkManager.getInstance());
     }
 }

@@ -62,10 +62,12 @@ public class ChatListener implements Listener {
             player.sendMessage(CC.translate("&c聊天还在冷却中！购买&a石&c会员即可取消聊天冷却"));
             return;
         }
-        if (player.hasPermission("panshi.vip")) {
-            event.setFormat(PlaceholderAPI.setPlaceholders(player, FORMAT) + CC.translate("%1$s&f: %2$s"));
-        } else {
-            event.setFormat(PlaceholderAPI.setPlaceholders(player, FORMAT) + CC.translate("%1$s&7: %2$s"));
+        if (NetworkManager.getInstance().getConfig().getBoolean("chat_format_enable")) {
+            if (player.hasPermission("panshi.vip")) {
+                event.setFormat(PlaceholderAPI.setPlaceholders(player, FORMAT) + CC.translate("%1$s&f: %2$s"));
+            } else {
+                event.setFormat(PlaceholderAPI.setPlaceholders(player, FORMAT) + CC.translate("%1$s&7: %2$s"));
+            }
         }
 
         List<Player> ignored = new ArrayList<>();

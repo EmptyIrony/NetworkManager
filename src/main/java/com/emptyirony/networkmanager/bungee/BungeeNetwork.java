@@ -1,15 +1,13 @@
 package com.emptyirony.networkmanager.bungee;
 
-import com.emptyirony.networkmanager.bungee.command.ModsCommand;
 import com.emptyirony.networkmanager.bungee.command.RejoinCommand;
+import com.emptyirony.networkmanager.bungee.command.ReportCommand;
+import com.emptyirony.networkmanager.bungee.command.StaffCommand;
 import com.emptyirony.networkmanager.bungee.database.MongoDB;
 import com.emptyirony.networkmanager.bungee.listener.MessageListener;
 import com.emptyirony.networkmanager.bungee.listener.NetworkListener;
 import com.emptyirony.networkmanager.bungee.listener.PlayerListener;
-import com.emptyirony.networkmanager.packet.PacketFriendRequest;
-import com.emptyirony.networkmanager.packet.PacketHeartBeat;
-import com.emptyirony.networkmanager.packet.PacketStaffMsg;
-import com.emptyirony.networkmanager.packet.PacketStaffSwitchServer;
+import com.emptyirony.networkmanager.packet.*;
 import com.minexd.pidgin.Pidgin;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -36,7 +34,9 @@ public class BungeeNetwork extends Plugin {
                 PacketFriendRequest.class,
                 PacketHeartBeat.class,
                 PacketStaffMsg.class,
-                PacketStaffSwitchServer.class
+                PacketStaffSwitchServer.class,
+                PacketServerShutdown.class,
+                PacketPlayerJoinOrQuit.class
         ).forEach(pidgin::registerPacket);
 
         pidgin.registerListener(new NetworkListener());
@@ -44,7 +44,9 @@ public class BungeeNetwork extends Plugin {
         mongoDB = new MongoDB();
 
         this.getProxy().getPluginManager().registerCommand(this, new RejoinCommand());
-        this.getProxy().getPluginManager().registerCommand(this, new ModsCommand());
+        this.getProxy().getPluginManager().registerCommand(this, new StaffCommand());
+        this.getProxy().getPluginManager().registerCommand(this, new ReportCommand());
+//        this.getProxy().getPluginManager().registerCommand(this, new ModsCommand());
         this.getProxy().getPluginManager().registerListener(this, new PlayerListener());
         this.getProxy().getPluginManager().registerListener(this, new MessageListener());
     }

@@ -2,35 +2,30 @@ package com.emptyirony.networkmanager.network.command;
 
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.data.PlayerData;
+import com.emptyirony.networkmanager.util.NickUtil;
 import com.emptyirony.networkmanager.util.bookutils.NMSBookBuilder;
 import com.emptyirony.networkmanager.util.bookutils.NMSBookUtils;
 import com.emptyirony.networkmanager.util.signutils.SignGUI;
-import com.mojang.authlib.GameProfile;
 import com.qrakn.honcho.command.CommandMeta;
-import lombok.SneakyThrows;
 import lombok.val;
-import me.neznamy.tab.api.TABAPI;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryMode;
+import net.luckperms.api.query.QueryOptions;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import strafe.games.core.profile.Profile;
 import strafe.games.core.util.CC;
-
-import java.lang.reflect.Field;
 
 /**
  * 2 * @Author: EmptyIrony
  * 3 * @Date: 2020/2/26 14:39
  * 4
  */
-@CommandMeta(label = "nick", async = true)
+@CommandMeta(label = "nick", async = true, permission = "panshimc.admin")
 public class NickCommand {
     public void execute(Player player) {
         if (NetworkManager.getInstance().getServerType() != 0) {
@@ -38,9 +33,12 @@ public class NickCommand {
             return;
         }
         PlayerData data = PlayerData.getByUuid(player.getUniqueId());
+        Profile profile = Profile.getByUuid(player.getUniqueId());
 
         if (data.isNick()) {
-            nick(player, data.getName());
+            User user = LuckPermsProvider.get().getUserManager().getUser(player.getUniqueId());
+            CachedMetaData metaData = user.getCachedData().getMetaData(QueryOptions.builder(QueryMode.CONTEXTUAL).build());
+            NickUtil.nick(player, profile.getName(), metaData.getPrefix());
             data.setNick(false);
             return;
         }
@@ -122,7 +120,7 @@ public class NickCommand {
         } catch (Exception ignored) {
         }
 
-        if (targetProfile != null && targetProfile.getFirstSeen() != 0) {
+        if (targetProfile != null && targetProfile.getFirstSeen() != null) {
             player.sendMessage(CC.translate("&c该名称已被使用！请重新填写名称！"));
             return;
         }
@@ -174,7 +172,7 @@ public class NickCommand {
 
         String name;
         name = typeName;
-        nick(player, name);
+        NickUtil.nick(player, name, prefix);
         player.sendMessage(CC.translate("&a成功！你现在的昵称是" + name));
         PlayerData data = PlayerData.getByUuid(player.getUniqueId());
         data.setNick(true);
@@ -182,28 +180,4 @@ public class NickCommand {
         data.save(false);
     }
 
-
-    @SneakyThrows
-    private void nick(Player player, String id) {
-        Field name = GameProfile.class.getDeclaredField("name");
-        CraftPlayer ePlayer = ((CraftPlayer) player);
-        name.setAccessible(true);
-        name.set(ePlayer.getProfile(), id);
-        TABAPI.setCustomTabNameTemporarily(player.getUniqueId(), player.getDisplayName());
-
-        PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(player.getEntityId());
-        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        PacketPlayOutPlayerInfo playerInfo = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
-        PacketPlayOutNamedEntitySpawn spawn = new PacketPlayOutNamedEntitySpawn(entityPlayer);
-
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            if (!target.equals(player)) {
-                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(destroy);
-                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(playerInfo);
-                playerInfo = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
-                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(spawn);
-                ((CraftPlayer) target).getHandle().playerConnection.sendPacket(playerInfo);
-            }
-        }
-    }
 }

@@ -1,2 +1,3 @@
 server_name: NoName
+chat_format_enable: true
 chat_format: "%1$s&r: "
