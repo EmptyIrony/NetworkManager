@@ -4,6 +4,7 @@ import com.emptyirony.networkmanager.bungee.data.ModInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
  * 4
  */
 public class MessageListener implements Listener {
-//    @EventHandler
+    @EventHandler
     public void onMessage(PluginMessageEvent event) {
         byte[] bytes = event.getData();
         if (bytes.length != 0) {
