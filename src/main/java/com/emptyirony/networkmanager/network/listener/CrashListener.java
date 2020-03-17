@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class CrashListener extends PacketHandler {
     @Override
     public void onSend(SentPacket sentPacket) {
-
     }
 
     @Override
