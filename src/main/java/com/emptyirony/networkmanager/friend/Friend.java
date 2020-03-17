@@ -10,6 +10,7 @@ public class Friend {
     public Friend() {
         System.out.println("初始化好友系统...");
 //        Stone.get().getHoncho().registerCommand(new FriendCommand());
+        
 
     }
 }
