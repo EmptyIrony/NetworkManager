@@ -8,10 +8,14 @@ import com.emptyirony.networkmanager.packet.PacketStaffSwitchServer;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.protocol.packet.PluginMessage;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -36,24 +40,24 @@ public class PlayerListener implements Listener {
         BungeeNetwork.getInstance().getPidgin().sendPacket(packet);
     }
 
-//    @EventHandler
-//    public void onJoin(PostLoginEvent event) {
-//        ProxiedPlayer player = event.getPlayer();
-//        new LoginData(player.getUniqueId()).load();
-//
-//        BungeeNetwork.getInstance().getProxy().getScheduler().schedule(BungeeNetwork.getInstance(), () -> {
-//            sendFmlPacket(player, (byte) -2, (byte) 0);
-//            sendFmlPacket(player, (byte) 0, (byte) 2, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
-//            sendFmlPacket(player, (byte) 2, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
-//        }, 5, TimeUnit.SECONDS);
-//
-//        PacketPlayerJoinOrQuit packet = new PacketPlayerJoinOrQuit(event.getPlayer().getName(), true);
-//        BungeeNetwork.getInstance().getPidgin().sendPacket(packet);
-//    }
-//
-//    private void sendFmlPacket(ProxiedPlayer player, byte... data) {
-//        player.unsafe().sendPacket(new PluginMessage("FML|HS", data, false));
-//    }
+    @EventHandler
+    public void onJoin(PostLoginEvent event) {
+        ProxiedPlayer player = event.getPlayer();
+        new LoginData(player.getUniqueId(), player.getName()).load();
+
+        BungeeNetwork.getInstance().getProxy().getScheduler().schedule(BungeeNetwork.getInstance(), () -> {
+            sendFmlPacket(player, (byte) -2, (byte) 0);
+            sendFmlPacket(player, (byte) 0, (byte) 2, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+            sendFmlPacket(player, (byte) 2, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+        }, 5, TimeUnit.SECONDS);
+
+        PacketPlayerJoinOrQuit packet = new PacketPlayerJoinOrQuit(event.getPlayer().getName(), true);
+        BungeeNetwork.getInstance().getPidgin().sendPacket(packet);
+    }
+
+    private void sendFmlPacket(ProxiedPlayer player, byte... data) {
+        player.unsafe().sendPacket(new PluginMessage("FML|HS", data, false));
+    }
 
     @EventHandler
     public void onDisconnected(PlayerDisconnectEvent event) {

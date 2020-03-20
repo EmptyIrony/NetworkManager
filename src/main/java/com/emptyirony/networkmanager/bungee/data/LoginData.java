@@ -21,13 +21,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class LoginData {
     private static Map<UUID, LoginData> cache = new HashMap<>();
-    private String _id;
     private String uuid;
     private String lastLobby;
     private String lastGame;
+    private String name;
 
-    public LoginData(UUID uuid) {
+    public LoginData(UUID uuid, String name) {
         this.uuid = uuid.toString();
+        this.name = name;
         this.lastLobby = "UNKNOW";
         this.lastGame = "UNKNOW";
     }
@@ -36,7 +37,9 @@ public class LoginData {
         if (cache.get(uuid) != null) {
             return cache.get(uuid);
         }
-        return new LoginData(uuid).load();
+        LoginData data = new LoginData();
+        data.setUuid(uuid.toString());
+        return data.load();
     }
 
     public LoginData load() {

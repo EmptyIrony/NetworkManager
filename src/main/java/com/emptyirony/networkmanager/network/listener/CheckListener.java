@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * 3 * @Date: 2020/3/11 15:44
  * 4
  */
-public class CrashListener extends PacketHandler {
+public class CheckListener extends PacketHandler {
     @Override
     public void onSend(SentPacket sentPacket) {
 

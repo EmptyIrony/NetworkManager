@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * 4
  */
 @CommandMeta(label = "crashclient", permission = "panshi.admin", async = true)
-public class CrashCommand {
+public class CheckCommand {
     public void execute(Player player, @CPL("player") Player target) {
         PacketStaffMsg packetStaffMsg = new PacketStaffMsg(player.getName(), CC.translate("&8" + player.getName() + "&7 尝试崩溃 &8" + target.getName() + "&7 的客户端"), 2);
         NetworkManager.getInstance().getPidgin().sendPacket(packetStaffMsg);

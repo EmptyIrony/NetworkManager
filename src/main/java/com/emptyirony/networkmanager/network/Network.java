@@ -4,7 +4,7 @@ import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.friend.Friend;
 import com.emptyirony.networkmanager.network.command.*;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
-import com.emptyirony.networkmanager.network.listener.CrashListener;
+import com.emptyirony.networkmanager.network.listener.CheckListener;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
 import com.emptyirony.networkmanager.network.listener.PlayerListener;
 import com.emptyirony.networkmanager.packet.*;
@@ -14,6 +14,8 @@ import org.bukkit.Bukkit;
 import org.inventivetalent.packetlistener.PacketListenerAPI;
 import strafe.games.core.Stone;
 import strafe.games.core.util.RefUtil;
+
+import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
@@ -41,36 +43,47 @@ public class Network {
         NetworkManager.getInstance().setServerType(SERVER_NAME.split("_")[0].equalsIgnoreCase("hub") ? 0 : 1);
 
 
-        System.out.println("已注册NetWork数据包！");
+        System.out.println("Registered redis packets listener！");
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), plugin);
-        plugin.getPidgin().registerListener(new NetworkListener(plugin));
-        System.out.println("已注册NetWork数据包监听器！");
-        plugin.getPidgin().registerPacket(PacketHeartBeat.class);
-        plugin.getPidgin().registerPacket(PacketStaffMsg.class);
-        plugin.getPidgin().registerPacket(PacketFriendRequest.class);
-        plugin.getPidgin().registerPacket(PacketStaffSwitchServer.class);
-        plugin.getPidgin().registerPacket(PacketServerShutdown.class);
-        plugin.getPidgin().registerPacket(PacketPlayerJoinOrQuit.class);
 
-        Stone.get().getHoncho().registerCommand(new NetworkCommand());
-        Stone.get().getHoncho().registerCommand(new StaffCommand());
-        Stone.get().getHoncho().registerCommand(new StaffChat());
-        Stone.get().getHoncho().registerCommand(new NickCommand());
+        plugin.getPidgin().registerListener(new NetworkListener(plugin));
+        Arrays.asList(
+                PacketHeartBeat.class,
+                PacketStaffMsg.class,
+                PacketFriendRequest.class,
+                PacketStaffSwitchServer.class,
+                PacketServerShutdown.class,
+                PacketPlayerJoinOrQuit.class
+        ).forEach(packet -> {
+            plugin.getPidgin().registerPacket(packet);
+        });
+        System.out.println("Registered redis packets！");
+
+        Arrays.asList(
+                new NetworkCommand(),
+                new StaffCommand(),
+                new StaffChat(),
+                new NickCommand()
+        ).forEach(command -> {
+            Stone.get().getHoncho().registerCommand(command);
+        });
+
+
         if (RefUtil.getVersion().startsWith("v1_8")) {
-            Stone.get().getHoncho().registerCommand(new CrashCommand());
-            PacketListenerAPI.addPacketHandler(new CrashListener());
+            Stone.get().getHoncho().registerCommand(new CheckCommand());
+            PacketListenerAPI.addPacketHandler(new CheckListener());
         }
 
         Stone.get().getHoncho().registerCommand(new ShutdownCommand());
-        System.out.println("已注册NetWork指令！");
+        System.out.println("Registered command！");
 
         HeartBeatRunnable heartBeatRunnable = new HeartBeatRunnable(SERVER_NAME);
         Thread thread = new Thread(heartBeatRunnable);
         thread.start();
-        System.out.println("心跳活动开始");
+        System.out.println("Heart Beat Started");
 
-        System.out.println("好友系统开始初始化...");
+        System.out.println("Friend system initialling...");
         this.friend = new Friend();
-        System.out.println("好友系统初始化完成！");
+        System.out.println("Friend system init successfully");
     }
 }

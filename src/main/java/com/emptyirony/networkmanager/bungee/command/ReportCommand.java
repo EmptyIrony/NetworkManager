@@ -1,7 +1,10 @@
 package com.emptyirony.networkmanager.bungee.command;
 
 import com.emptyirony.networkmanager.bungee.BungeeNetwork;
+import com.emptyirony.networkmanager.bungee.data.ReportsData;
+import com.emptyirony.networkmanager.bungee.data.sub.ReportData;
 import com.emptyirony.networkmanager.bungee.util.CC;
+import com.emptyirony.networkmanager.bungee.util.UUIDUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -49,19 +52,49 @@ public class ReportCommand extends Command {
                 builder.append(args[i])
                         .append(" ");
             }
+
+
             if (cooldownMap.get(player.getUniqueId()) == null || cooldownMap.get(player.getUniqueId()).hasExpired()) {
+
+                String id = UUIDUtil.generateShortUuid();
+
+                ReportData reportData = new ReportData(id, player.getUniqueId().toString(), target.getUniqueId().toString(), builder.toString());
+                ReportsData.get().getActiveReports().add(reportData);
+                ReportsData.get().save();
+
                 cooldownMap.put(player.getUniqueId(), new Cooldown(1000 * 30));
                 player.sendMessage(CC.translate("&a我们已经接到了您对&e" + target.getName() + "&a的举报，原因是&e" + builder.toString()));
                 player.sendMessage(CC.translate("&a您的举报已经提交给所有的在线工作人员和反作弊，我们知道您一样不喜欢破坏规则的玩家，我们将在第一时间为您处理"));
+                player.sendMessage(CC.translate("&a您的举报回执码为: &e" + id + "&a,您可以使用回执码进行举报进度查询"));
                 player.sendMessage(CC.translate("&a关于聊天举报，我们推荐您使用&e/chatreport 玩家名"));
 
+                TextComponent chat = new TextComponent(CC.translate("&7举报编号: &9" + id));
+                chat.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("&9点击复制举报编号").create()));
+                chat.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, id));
+
                 TextComponent chatComponentBuilder = new TextComponent(CC.translate("&9[REPORT] &7" + player.getName() + "&9 举报了 &7" + target.getName() + "&7,理由: &9" + builder.toString()));
-                chatComponentBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("&9CLICK TO TELEPORT THE SERVER").create()));
+                chatComponentBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("&9点击传送到目标服务器").create()));
                 chatComponentBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + target.getServer().getInfo().getName()));
+
+                TextComponent result1 = new TextComponent(CC.translate("&7处理结果反馈: "));
+                TextComponent result2 = new TextComponent(CC.translate("&9[&c&l确认违规&9] "));
+                TextComponent result3 = new TextComponent(CC.translate("&9[&7&l无法确认&9] "));
+                TextComponent result4 = new TextComponent(CC.translate("&9[&a&l未违规&9] "));
+
+                result2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reportsystem sure " + id));
+                result3.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reportsystem notsure " + id));
+                result4.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reportsystem not " + id));
+
+                result1.addExtra(result2);
+                result1.addExtra(result3);
+                result1.addExtra(result4);
+
 
                 for (ProxiedPlayer proxiedPlayer : BungeeNetwork.getInstance().getProxy().getPlayers()) {
                     if (proxiedPlayer.hasPermission("panshi.mod")) {
+                        proxiedPlayer.sendMessage(chat);
                         proxiedPlayer.sendMessage(chatComponentBuilder);
+                        proxiedPlayer.sendMessage(result1);
                     }
                 }
             } else {
