@@ -2,9 +2,9 @@ package com.emptyirony.networkmanager.network.command;
 
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.bungee.util.CC;
-import com.emptyirony.networkmanager.packet.PacketStaffMsg;
 import com.qrakn.honcho.command.CPL;
 import com.qrakn.honcho.command.CommandMeta;
+import me.allen.chen.staff.PacketStaffMessage;
 import net.minecraft.server.v1_8_R3.PacketPlayOutExplosion;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 import net.minecraft.server.v1_8_R3.Vec3D;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @CommandMeta(label = "crashclient", permission = "panshi.admin", async = true)
 public class CheckCommand {
     public void execute(Player player, @CPL("player") Player target) {
-        PacketStaffMsg packetStaffMsg = new PacketStaffMsg(player.getName(), CC.translate("&8" + player.getName() + "&7 尝试崩溃 &8" + target.getName() + "&7 的客户端"), 2);
+        PacketStaffMessage packetStaffMsg = new PacketStaffMessage(player.getName(), CC.translate("&8" + player.getName() + "&7 尝试崩溃 &8" + target.getName() + "&7 的客户端"), PacketStaffMessage.StaffMessageType.ADMIN);
         NetworkManager.getInstance().getPidgin().sendPacket(packetStaffMsg);
 
         Location location = target.getLocation();

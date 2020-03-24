@@ -1,11 +1,11 @@
 package com.emptyirony.networkmanager.network.heartbeat;
 
 import com.emptyirony.networkmanager.NetworkManager;
-import com.emptyirony.networkmanager.data.PlayerData;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
 import com.emptyirony.networkmanager.packet.PacketHeartBeat;
 import com.emptyirony.networkmanager.util.ReflectUtils;
 import lombok.SneakyThrows;
+import me.allen.chen.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import strafe.games.core.util.CC;
@@ -68,7 +68,7 @@ public class HeartBeatRunnable implements Runnable {
 
                 List<String> dead = new ArrayList<>();
                 ServerInfo.getCache().forEach((s, serverInfo) -> {
-                    if (System.currentTimeMillis() - serverInfo.getLastHeartBeat() > 5 * 1000) {
+                    if (System.currentTimeMillis() - serverInfo.getLastHeartBeat() > 5_000L) {
                         dead.add(s);
                     }
                 });
@@ -76,8 +76,8 @@ public class HeartBeatRunnable implements Runnable {
                 dead.forEach(s -> {
                     ServerInfo.getCache().remove(s);
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        PlayerData data = new PlayerData(player.getUniqueId()).load();
-                        if (data.getStaffOption().isNotify() && player.hasPermission("panshi.mod")) {
+                        User user = User.getByUUID(player.getUniqueId());
+                        if (user.getStaffSettings().isStaffChatNotify() && player.hasPermission("panshi.mod")) {
                             player.sendMessage(CC.translate("&e[员工频道] &c" + "CONSOLE" + ": &f" + s + " 服务器离线了" + "&e(" + "ServerOffline" + ")"));
                         }
                     }

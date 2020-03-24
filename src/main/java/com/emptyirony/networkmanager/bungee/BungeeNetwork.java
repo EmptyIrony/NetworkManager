@@ -5,7 +5,6 @@ import com.emptyirony.networkmanager.bungee.command.ReportCommand;
 import com.emptyirony.networkmanager.bungee.command.StaffCommand;
 import com.emptyirony.networkmanager.bungee.database.MongoDB;
 import com.emptyirony.networkmanager.bungee.listener.MessageListener;
-import com.emptyirony.networkmanager.bungee.listener.NetworkListener;
 import com.emptyirony.networkmanager.bungee.listener.PlayerListener;
 import com.emptyirony.networkmanager.packet.*;
 import com.minexd.pidgin.Pidgin;
@@ -24,6 +23,7 @@ public class BungeeNetwork extends Plugin {
     @Getter
     private static BungeeNetwork instance;
     private Pidgin pidgin;
+
     private MongoDB mongoDB;
 
     @Override
@@ -32,16 +32,12 @@ public class BungeeNetwork extends Plugin {
         pidgin = new Pidgin("network", "127.0.0.1", 6379, null);
         Arrays.asList(
                 PacketHeartBeat.class,
-                PacketStaffMsg.class,
-                PacketFriendRequest.class,
                 PacketStaffSwitchServer.class,
                 PacketServerShutdown.class,
                 PacketPlayerJoinOrQuit.class
         ).forEach(pidgin::registerPacket);
 
-        pidgin.registerListener(new NetworkListener());
-
-        mongoDB = new MongoDB();
+        this.mongoDB = new MongoDB();
 
         this.getProxy().getPluginManager().registerCommand(this, new RejoinCommand());
         this.getProxy().getPluginManager().registerCommand(this, new StaffCommand());

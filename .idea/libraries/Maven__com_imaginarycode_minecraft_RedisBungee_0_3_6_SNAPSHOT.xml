@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.imaginarycode.minecraft:RedisBungee:0.3.6-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/imaginarycode/minecraft/RedisBungee/0.3.6-SNAPSHOT/RedisBungee-0.3.6-20150628.110938-67.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/imaginarycode/minecraft/RedisBungee/0.3.6-SNAPSHOT/RedisBungee-0.3.6-20150628.110938-67-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/imaginarycode/minecraft/RedisBungee/0.3.6-SNAPSHOT/RedisBungee-0.3.6-20150628.110938-67-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

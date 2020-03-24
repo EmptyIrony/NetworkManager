@@ -1,12 +1,10 @@
 package com.emptyirony.networkmanager.network;
 
 import com.emptyirony.networkmanager.NetworkManager;
-import com.emptyirony.networkmanager.friend.Friend;
 import com.emptyirony.networkmanager.network.command.*;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
 import com.emptyirony.networkmanager.network.listener.CheckListener;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
-import com.emptyirony.networkmanager.network.listener.PlayerListener;
 import com.emptyirony.networkmanager.packet.*;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -28,7 +26,6 @@ import static java.lang.Thread.sleep;
 public class Network {
     public static String SERVER_NAME;
     private boolean shutDowning;
-    private Friend friend;
 
     @SneakyThrows
     public Network() {
@@ -44,13 +41,10 @@ public class Network {
 
 
         System.out.println("Registered redis packets listener！");
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), plugin);
 
         plugin.getPidgin().registerListener(new NetworkListener(plugin));
         Arrays.asList(
                 PacketHeartBeat.class,
-                PacketStaffMsg.class,
-                PacketFriendRequest.class,
                 PacketStaffSwitchServer.class,
                 PacketServerShutdown.class,
                 PacketPlayerJoinOrQuit.class
@@ -60,10 +54,7 @@ public class Network {
         System.out.println("Registered redis packets！");
 
         Arrays.asList(
-                new NetworkCommand(),
-                new StaffCommand(),
-                new StaffChat(),
-                new NickCommand()
+                new NetworkCommand()
         ).forEach(command -> {
             Stone.get().getHoncho().registerCommand(command);
         });
@@ -83,7 +74,5 @@ public class Network {
         System.out.println("Heart Beat Started");
 
         System.out.println("Friend system initialling...");
-        this.friend = new Friend();
-        System.out.println("Friend system init successfully");
     }
 }
