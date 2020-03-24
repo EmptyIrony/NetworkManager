@@ -31,9 +31,9 @@ public class BungeeNetwork extends Plugin {
         instance = this;
         pidgin = new Pidgin("network", "127.0.0.1", 6379, null);
         Arrays.asList(
-                PacketFriendRequest.class,
                 PacketHeartBeat.class,
                 PacketStaffMsg.class,
+                PacketFriendRequest.class,
                 PacketStaffSwitchServer.class,
                 PacketServerShutdown.class,
                 PacketPlayerJoinOrQuit.class

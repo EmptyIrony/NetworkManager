@@ -1,6 +1,7 @@
 package com.emptyirony.networkmanager.database;
 
 import com.emptyirony.networkmanager.data.PlayerData;
+import com.emptyirony.networkmanager.quest.data.PlayerQuestData;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
@@ -18,6 +19,7 @@ public class MongoDB {
     private MongoClient client;
 
     private JacksonMongoCollection<PlayerData> playerDataJacksonMongoCollection;
+    private JacksonMongoCollection<PlayerQuestData> playerQuestDataJacksonMongoCollection;
 
     public MongoDB() {
         this.client = new MongoClient(new ServerAddress("127.0.0.1", 27017));
@@ -25,5 +27,6 @@ public class MongoDB {
         this.database = client.getDatabase("network");
 
         this.playerDataJacksonMongoCollection = JacksonMongoCollection.<PlayerData>builder().build(this.database.getCollection("data"), PlayerData.class);
+        this.playerQuestDataJacksonMongoCollection = JacksonMongoCollection.<PlayerQuestData>builder().build(this.database.getCollection("quest"), PlayerQuestData.class);
     }
 }
