@@ -115,7 +115,7 @@
         </dependency>
         <dependency>
             <groupId>me.allen</groupId>
-            <artifactId>chen</artifactId>
+            <artifactId>Chen</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

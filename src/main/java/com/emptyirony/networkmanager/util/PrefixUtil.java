@@ -16,6 +16,8 @@ import java.util.UUID;
  * 3 * @Date: 2020/3/26 9:19
  * 4
  */
+
+
 public class PrefixUtil {
 
     public static String getPrefix(UUID uuid) {
