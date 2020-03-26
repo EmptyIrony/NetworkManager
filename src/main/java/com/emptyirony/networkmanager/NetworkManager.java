@@ -4,7 +4,6 @@ import com.emptyirony.networkmanager.network.Network;
 import com.minexd.pidgin.Pidgin;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.nicknamer.command.GeneralCommands;
@@ -45,6 +44,8 @@ public class NetworkManager extends JavaPlugin {
                 canJoin = true;
             }
         }.runTaskLater(this, 20 * 5);
+
+        Stone.get().getHoncho().registerCommand(new TestCommand());
     }
 
     private void loadRedis() {

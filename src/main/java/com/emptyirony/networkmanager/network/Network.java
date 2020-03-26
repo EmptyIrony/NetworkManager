@@ -1,7 +1,9 @@
 package com.emptyirony.networkmanager.network;
 
 import com.emptyirony.networkmanager.NetworkManager;
-import com.emptyirony.networkmanager.network.command.*;
+import com.emptyirony.networkmanager.network.command.CheckCommand;
+import com.emptyirony.networkmanager.network.command.NetworkCommand;
+import com.emptyirony.networkmanager.network.command.ShutdownCommand;
 import com.emptyirony.networkmanager.network.heartbeat.HeartBeatRunnable;
 import com.emptyirony.networkmanager.network.listener.CheckListener;
 import com.emptyirony.networkmanager.network.listener.NetworkListener;
@@ -47,7 +49,8 @@ public class Network {
                 PacketHeartBeat.class,
                 PacketStaffSwitchServer.class,
                 PacketServerShutdown.class,
-                PacketPlayerJoinOrQuit.class
+                PacketPlayerJoinOrQuit.class,
+                PacketAlert.class
         ).forEach(packet -> {
             plugin.getPidgin().registerPacket(packet);
         });

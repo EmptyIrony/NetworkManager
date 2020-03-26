@@ -3,7 +3,10 @@ package com.emptyirony.networkmanager.network.listener;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.network.Network;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
-import com.emptyirony.networkmanager.packet.*;
+import com.emptyirony.networkmanager.packet.PacketAlert;
+import com.emptyirony.networkmanager.packet.PacketHeartBeat;
+import com.emptyirony.networkmanager.packet.PacketServerShutdown;
+import com.emptyirony.networkmanager.packet.PacketStaffSwitchServer;
 import com.minexd.pidgin.packet.handler.IncomingPacketHandler;
 import com.minexd.pidgin.packet.listener.PacketListener;
 import me.allen.chen.user.User;
@@ -36,6 +39,13 @@ public class NetworkListener implements PacketListener {
         }
 
         new ServerInfo(packet.getName(), packet.getOnlinePlayers(), packet.getMotd(), packet.getTime(), packet.getTps());
+    }
+
+    @IncomingPacketHandler
+    public void onAlert(PacketAlert packet) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.spigot().sendMessage(packet.getComponent());
+        }
     }
 
     @IncomingPacketHandler
