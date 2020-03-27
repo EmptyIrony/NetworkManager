@@ -9,7 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.TextComponentSerializer;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -48,10 +51,10 @@ public class PacketAlert implements Packet {
     @Override
     public void deserialize(JsonObject json) {
         JsonElement text = json.get("msg");
-        TextComponent component = serializer.deserialize(text, TextComponent.class, null);
-
+        IChatBaseComponent a = IChatBaseComponent.ChatSerializer.a(text.toString());
+        PacketPlayOutChat chat = new PacketPlayOutChat(a, (byte) 0);
         Bukkit.getOnlinePlayers().forEach(player -> {
-            player.spigot().sendMessage(component);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(chat);
         });
 
         this.sender = json.get("sender").getAsString();
