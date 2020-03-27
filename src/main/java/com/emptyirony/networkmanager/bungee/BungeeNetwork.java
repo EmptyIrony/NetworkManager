@@ -34,7 +34,8 @@ public class BungeeNetwork extends Plugin {
                 PacketHeartBeat.class,
                 PacketStaffSwitchServer.class,
                 PacketServerShutdown.class,
-                PacketPlayerJoinOrQuit.class
+                PacketPlayerJoinOrQuit.class,
+                PacketAlert.class
         ).forEach(pidgin::registerPacket);
 
         this.mongoDB = new MongoDB();
