@@ -1,18 +1,14 @@
 package com.emptyirony.networkmanager.packet;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.minexd.pidgin.packet.Packet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.chat.TextComponentSerializer;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -30,8 +26,9 @@ public class PacketAlert implements Packet {
         serializer = new TextComponentSerializer();
     }
 
-    private TextComponent component;
+    private BaseComponent[] component;
     private String sender;
+    private String player;
 
     @Override
     public int id() {
@@ -41,22 +38,21 @@ public class PacketAlert implements Packet {
     @Override
     public JsonObject serialize() {
         JsonObject json = new JsonObject();
-
-        json.add("msg", serializer.serialize(component, component.getClass(), null));
+        String string = ComponentSerializer.toString(component);
+        json.addProperty("msg", string);
         json.addProperty("sender", sender);
+        if (player != null) {
+            json.addProperty("player", player);
+        }
 
         return json;
     }
 
     @Override
     public void deserialize(JsonObject json) {
-        JsonElement text = json.get("msg");
-        IChatBaseComponent a = IChatBaseComponent.ChatSerializer.a(text.toString());
-        PacketPlayOutChat chat = new PacketPlayOutChat(a, (byte) 0);
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(chat);
-        });
-
+        String msg = json.get("msg").getAsString();
+        this.component = ComponentSerializer.parse(msg);
         this.sender = json.get("sender").getAsString();
+        this.player = json.get("player") == null ? null : json.get("player").getAsString();
     }
 }

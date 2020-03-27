@@ -43,7 +43,14 @@ public class NetworkListener implements PacketListener {
 
     @IncomingPacketHandler
     public void onAlert(PacketAlert packet) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        if (packet.getPlayer() == null) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.spigot().sendMessage(packet.getComponent());
+            }
+            return;
+        }
+        Player player = Bukkit.getPlayer(packet.getPlayer());
+        if (player != null) {
             player.spigot().sendMessage(packet.getComponent());
         }
     }
