@@ -1,5 +1,6 @@
 package com.emptyirony.networkmanager.packet;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.minexd.pidgin.packet.Packet;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.TextComponentSerializer;
+import org.bukkit.Bukkit;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -19,6 +21,7 @@ import net.md_5.bungee.chat.TextComponentSerializer;
 @Data
 public class PacketAlert implements Packet {
     private static TextComponentSerializer serializer;
+    private static Gson gson;
 
     static {
         serializer = new TextComponentSerializer();
@@ -35,8 +38,8 @@ public class PacketAlert implements Packet {
     @Override
     public JsonObject serialize() {
         JsonObject json = new JsonObject();
-        JsonElement element = serializer.serialize(component, json.getClass(), null);
-        json.add("msg", element);
+
+        json.add("msg", serializer.serialize(component, component.getClass(), null));
         json.addProperty("sender", sender);
 
         return json;
@@ -45,8 +48,11 @@ public class PacketAlert implements Packet {
     @Override
     public void deserialize(JsonObject json) {
         JsonElement text = json.get("msg");
+        TextComponent component = serializer.deserialize(text, TextComponent.class, null);
 
-        this.component = serializer.deserialize(text, json.getClass(), null);
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.spigot().sendMessage(component);
+        });
 
         this.sender = json.get("sender").getAsString();
     }
