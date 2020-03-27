@@ -14,7 +14,7 @@ import strafe.games.core.util.ChatComponentBuilder;
 @CommandMeta(label = "alert")
 public class TestCommand {
     public void execute(Player player, String text) {
-        PacketAlert alert = new PacketAlert(new ChatComponentBuilder(CC.translate("&7[&4全服公告&7]" + text)).create(), player.getDisplayName(), null);
+        PacketAlert alert = new PacketAlert(new ChatComponentBuilder(CC.translate("&7[&4&l全服公告&7] &f" + text)).create(), player.getDisplayName(), null);
         NetworkManager.getInstance().getPidgin().sendPacket(alert);
     }
 }
