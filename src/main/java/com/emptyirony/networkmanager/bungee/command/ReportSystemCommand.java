@@ -5,12 +5,14 @@ import com.emptyirony.networkmanager.bungee.data.LoginData;
 import com.emptyirony.networkmanager.bungee.data.ReportsData;
 import com.emptyirony.networkmanager.bungee.data.sub.ReportData;
 import com.emptyirony.networkmanager.bungee.util.CC;
+import com.emptyirony.networkmanager.util.NetworkMessageUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -61,9 +63,27 @@ public class ReportSystemCommand extends Command {
                 }
             } else {
                 if (args[0].equalsIgnoreCase("sure")) {
+                    if (args.length != 2) {
+                        return;
+                    }
                     String name = args[1];
-
-
+                    Optional<ReportData> first = ReportsData.get().getActiveReports().stream().filter(reportData -> reportData.getId().equalsIgnoreCase(name)).findFirst();
+                    if (first.isPresent()) {
+                        ReportData reportData = first.get();
+                        reportData.setReceiver(player.getName());
+                        reportData.setResult("BANNED");
+                        ReportsData.get().getActiveReports().remove(reportData);
+                        ReportsData.get().getAccepted().add(reportData);
+                        ReportsData.get().save();
+                        NetworkMessageUtil.sendMessageWithPermission("panshi.mod", "&e" + player.getName() + "&c 处理了一个举报\n&cID: &e" + name + "\n&c处理结果: &eBANNED");
+                        String reporter = reportData.getReporter();
+                        LoginData data = LoginData.getByUuid(UUID.fromString(reporter));
+                        if (data != null) {
+                            NetworkMessageUtil.sendMessageToPlayer(data.getName(), CC.translate("&c您的一个举报已被处理并给予处罚，感谢您对社区环境的贡献"));
+                        }
+                    } else {
+                        player.sendMessage(CC.translate("&c没有找到相关举报"));
+                    }
                 }
             }
         }

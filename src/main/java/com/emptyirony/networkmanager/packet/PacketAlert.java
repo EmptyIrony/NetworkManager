@@ -27,8 +27,8 @@ public class PacketAlert implements Packet {
     }
 
     private BaseComponent[] component;
-    private String sender;
     private String player;
+    private String permission;
 
     @Override
     public int id() {
@@ -40,9 +40,11 @@ public class PacketAlert implements Packet {
         JsonObject json = new JsonObject();
         String string = ComponentSerializer.toString(component);
         json.addProperty("msg", string);
-        json.addProperty("sender", sender);
         if (player != null) {
             json.addProperty("player", player);
+        }
+        if (permission != null) {
+            json.addProperty("permission", permission);
         }
 
         return json;
@@ -52,7 +54,7 @@ public class PacketAlert implements Packet {
     public void deserialize(JsonObject json) {
         String msg = json.get("msg").getAsString();
         this.component = ComponentSerializer.parse(msg);
-        this.sender = json.get("sender").getAsString();
         this.player = json.get("player") == null ? null : json.get("player").getAsString();
+        this.permission = json.get("permission") == null ? null : json.get("permission").getAsString();
     }
 }

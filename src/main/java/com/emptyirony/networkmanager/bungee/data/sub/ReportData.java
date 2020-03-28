@@ -16,11 +16,18 @@ public class ReportData {
     private String target;
     private String reason;
     private String receiver;
+    private String result;
 
     public ReportData(String id, String reporter, String target, String reason) {
         this.id = id;
         this.reporter = reporter;
         this.target = target;
         this.reason = reason;
+    }
+
+    public enum Result {
+        BANNED,
+        NOT_SURE,
+        NORMAL
     }
 }

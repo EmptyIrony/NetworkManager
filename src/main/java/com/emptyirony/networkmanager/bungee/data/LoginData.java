@@ -34,21 +34,17 @@ public class LoginData {
     }
 
     public static LoginData getByUuid(UUID uuid) {
-        if (cache.get(uuid) != null) {
-            return cache.get(uuid);
-        }
-        LoginData data = new LoginData();
-        data.setUuid(uuid.toString());
-        return data.load();
+        return cache.get(uuid);
     }
 
-    public LoginData load() {
+    public void load() {
         if (this.uuid == null) {
             throw new NullPointerException("你必须使用带有uuid的构造函数进行构造，空构造函数仅供反序列化使用");
         }
         UUID id = UUID.fromString(uuid);
         if (cache.containsKey(id)) {
-            return cache.get(id);
+            cache.get(id);
+            return;
         }
 
         LoginData data = BungeeNetwork.getInstance().getMongoDB()
@@ -59,10 +55,9 @@ public class LoginData {
         if (data == null) {
             cache.put(id, this);
             this.save(false);
-            return this;
+            return;
         }
         cache.put(id, data);
-        return data;
     }
 
     public void save(boolean isQuit) {

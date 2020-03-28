@@ -5,6 +5,7 @@ import com.emptyirony.networkmanager.bungee.data.ReportsData;
 import com.emptyirony.networkmanager.bungee.data.sub.ReportData;
 import com.emptyirony.networkmanager.bungee.util.CC;
 import com.emptyirony.networkmanager.bungee.util.UUIDUtil;
+import com.emptyirony.networkmanager.util.NetworkMessageUtil;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import strafe.games.core.util.ChatComponentBuilder;
 import strafe.games.core.util.Cooldown;
 
 import java.util.HashMap;
@@ -89,14 +91,9 @@ public class ReportCommand extends Command {
                 result1.addExtra(result3);
                 result1.addExtra(result4);
 
+                ChatComponentBuilder componentBuilder = new ChatComponentBuilder("").append(result1);
 
-                for (ProxiedPlayer proxiedPlayer : BungeeNetwork.getInstance().getProxy().getPlayers()) {
-                    if (proxiedPlayer.hasPermission("panshi.mod")) {
-                        proxiedPlayer.sendMessage(chat);
-                        proxiedPlayer.sendMessage(chatComponentBuilder);
-                        proxiedPlayer.sendMessage(result1);
-                    }
-                }
+                NetworkMessageUtil.sendMessageWithPermission("panshi.mod", componentBuilder.create());
             } else {
                 player.sendMessage(CC.translate("&c举报还在冷却中.."));
             }

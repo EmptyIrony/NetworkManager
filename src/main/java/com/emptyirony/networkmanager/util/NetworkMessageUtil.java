@@ -12,23 +12,34 @@ import strafe.games.core.util.ChatComponentBuilder;
  * 4
  */
 public class NetworkMessageUtil {
-    public static void sendMessageToPlayer(JavaPlugin plugin, String name, String msg) {
-        sendMessageToPlayer(plugin, name, new ChatComponentBuilder(msg).create());
+    public static void sendMessageToPlayer(String name, String msg) {
+        sendMessageToPlayer(name, new ChatComponentBuilder(msg).create());
     }
 
-    public static void sendMessageToPlayer(JavaPlugin plugin, String name, BaseComponent[] msg) {
-        PacketAlert packet = new PacketAlert(msg, plugin.getName(), name);
+    public static void sendMessageToPlayer(String name, BaseComponent[] msg) {
+        PacketAlert packet = new PacketAlert(msg, name, null);
         NetworkManager.getInstance()
                 .getPidgin()
                 .sendPacket(packet);
     }
 
     public static void sendMessageAlert(JavaPlugin plugin, String msg) {
-        sendMessageAlert(plugin, new ChatComponentBuilder(msg).create());
+        sendMessageAlert(new ChatComponentBuilder(msg).create());
     }
 
-    public static void sendMessageAlert(JavaPlugin plugin, BaseComponent[] msg) {
-        PacketAlert packet = new PacketAlert(msg, plugin.getName(), null);
+    public static void sendMessageAlert(BaseComponent[] msg) {
+        PacketAlert packet = new PacketAlert(msg, null, null);
+        NetworkManager.getInstance()
+                .getPidgin()
+                .sendPacket(packet);
+    }
+
+    public static void sendMessageWithPermission(String permission, String msg) {
+        sendMessageWithPermission(permission, new ChatComponentBuilder(msg).create());
+    }
+
+    public static void sendMessageWithPermission(String permission, BaseComponent[] msg) {
+        PacketAlert packet = new PacketAlert(msg, null, permission);
         NetworkManager.getInstance()
                 .getPidgin()
                 .sendPacket(packet);
