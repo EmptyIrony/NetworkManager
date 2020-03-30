@@ -27,7 +27,6 @@ public class Network {
     public Network() {
         NetworkManager plugin = NetworkManager.getInstance();
         plugin.saveDefaultConfig();
-        CommandHandler.registerAll(NetworkManager.getInstance());
 
         SERVER_NAME = plugin.getConfig().getString("server_name");
         if (SERVER_NAME.equalsIgnoreCase("noname")) {
