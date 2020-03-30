@@ -4,6 +4,8 @@ import com.emptyirony.networkmanager.bungee.BungeeNetwork;
 import com.emptyirony.networkmanager.bungee.data.ReportsData;
 import com.emptyirony.networkmanager.bungee.data.sub.ReportData;
 import com.emptyirony.networkmanager.bungee.util.CC;
+import com.emptyirony.networkmanager.bungee.util.ChatComponentBuilder;
+import com.emptyirony.networkmanager.bungee.util.Cooldown;
 import com.emptyirony.networkmanager.bungee.util.UUIDUtil;
 import com.emptyirony.networkmanager.util.NetworkMessageUtil;
 import net.md_5.bungee.api.CommandSender;
@@ -13,8 +15,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import strafe.games.core.util.ChatComponentBuilder;
-import strafe.games.core.util.Cooldown;
 
 import java.util.HashMap;
 import java.util.Map;

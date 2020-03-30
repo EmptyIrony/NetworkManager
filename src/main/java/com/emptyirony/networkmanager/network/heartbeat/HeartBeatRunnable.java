@@ -3,12 +3,12 @@ package com.emptyirony.networkmanager.network.heartbeat;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.network.server.ServerInfo;
 import com.emptyirony.networkmanager.packet.PacketHeartBeat;
+import com.emptyirony.networkmanager.util.CC;
 import com.emptyirony.networkmanager.util.ReflectUtils;
 import lombok.SneakyThrows;
 import me.allen.chen.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import strafe.games.core.util.CC;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

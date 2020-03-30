@@ -2,9 +2,9 @@ package com.emptyirony.networkmanager.util;
 
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.packet.PacketAlert;
+import me.allen.chen.util.chat.ChatComponentBuilder;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.plugin.java.JavaPlugin;
-import strafe.games.core.util.ChatComponentBuilder;
 
 /**
  * 2 * @Author: EmptyIrony
