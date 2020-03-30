@@ -63,7 +63,7 @@ public class Pidgin {
 
             try (Jedis jedis = this.jedisPool.getResource()) {
 
-                System.out.println("[Pidgin] Attempting to publish packet..");
+                //System.out.println("[Pidgin] Attempting to publish packet..");
 
                 try {
 
@@ -72,7 +72,7 @@ public class Pidgin {
                     }
 
                     jedis.publish(this.channel, packet.id() + ";" + object.toString());
-                    System.out.println("[Pidgin] Successfully published packet..");
+                    //System.out.println("[Pidgin] Successfully published packet..");
 
                 } catch (Exception ex) {
                     System.out.println("[Pidgin] Failed to publish packet..");
