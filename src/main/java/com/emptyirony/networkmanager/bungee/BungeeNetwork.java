@@ -1,8 +1,7 @@
 package com.emptyirony.networkmanager.bungee;
 
-import com.emptyirony.networkmanager.bungee.command.RejoinCommand;
-import com.emptyirony.networkmanager.bungee.command.ReportCommand;
-import com.emptyirony.networkmanager.bungee.command.StaffCommand;
+import com.emptyirony.networkmanager.bungee.command.*;
+import com.emptyirony.networkmanager.bungee.data.ReportsData;
 import com.emptyirony.networkmanager.bungee.database.MongoDB;
 import com.emptyirony.networkmanager.bungee.listener.MessageListener;
 import com.emptyirony.networkmanager.bungee.listener.PlayerListener;
@@ -28,8 +27,15 @@ public class BungeeNetwork extends Plugin {
 
     @Override
     public void onEnable() {
+
         instance = this;
-        pidgin = new Pidgin("network", "127.0.0.1", 6379, null);
+
+        this.mongoDB = new MongoDB();
+        ReportsData reportsData = new ReportsData();
+        reportsData.load();
+
+        this.pidgin = new Pidgin("network", "127.0.0.1", 6379, "");
+
         Arrays.asList(
                 PacketHeartBeat.class,
                 PacketStaffSwitchServer.class,
@@ -38,13 +44,12 @@ public class BungeeNetwork extends Plugin {
                 PacketAlert.class
         ).forEach(pidgin::registerPacket);
 
-        this.mongoDB = new MongoDB();
-
         this.getProxy().getPluginManager().registerCommand(this, new RejoinCommand());
         this.getProxy().getPluginManager().registerCommand(this, new StaffCommand());
         this.getProxy().getPluginManager().registerCommand(this, new ReportCommand());
-//        this.getProxy().getPluginManager().registerCommand(this, new ModsCommand());
+        this.getProxy().getPluginManager().registerCommand(this, new ModsCommand());
         this.getProxy().getPluginManager().registerListener(this, new PlayerListener());
         this.getProxy().getPluginManager().registerListener(this, new MessageListener());
+        this.getProxy().getPluginManager().registerCommand(this, new ReportSystemCommand());
     }
 }

@@ -3,7 +3,6 @@ package com.emptyirony.networkmanager.util;
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.packet.PacketAlert;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.plugin.java.JavaPlugin;
 import strafe.games.core.util.ChatComponentBuilder;
 
 /**
@@ -23,7 +22,7 @@ public class NetworkMessageUtil {
                 .sendPacket(packet);
     }
 
-    public static void sendMessageAlert(JavaPlugin plugin, String msg) {
+    public static void sendMessageAlert(String msg) {
         sendMessageAlert(new ChatComponentBuilder(msg).create());
     }
 
@@ -36,6 +35,7 @@ public class NetworkMessageUtil {
 
     public static void sendMessageWithPermission(String permission, String msg) {
         sendMessageWithPermission(permission, new ChatComponentBuilder(msg).create());
+
     }
 
     public static void sendMessageWithPermission(String permission, BaseComponent[] msg) {

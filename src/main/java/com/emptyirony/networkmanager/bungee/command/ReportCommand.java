@@ -1,11 +1,11 @@
 package com.emptyirony.networkmanager.bungee.command;
 
-import com.emptyirony.networkmanager.bungee.BungeeNetwork;
 import com.emptyirony.networkmanager.bungee.data.ReportsData;
 import com.emptyirony.networkmanager.bungee.data.sub.ReportData;
 import com.emptyirony.networkmanager.bungee.util.CC;
 import com.emptyirony.networkmanager.bungee.util.UUIDUtil;
 import com.emptyirony.networkmanager.util.NetworkMessageUtil;
+import com.imaginarycode.minecraft.redisbungee.RedisBungee;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -40,12 +40,16 @@ public class ReportCommand extends Command {
                 player.sendMessage(CC.translate("&c举报指令用法: /report <玩家ID> <举报玩家>"));
                 return;
             }
-            ProxiedPlayer target = BungeeNetwork.getInstance().getProxy().getPlayer(args[0]);
-            if (target == null) {
+            UUID uuid = RedisBungee.getApi().getUuidFromName(args[0]);
+            if (uuid == null) {
                 player.sendMessage(CC.translate("&c目标玩家不在线"));
                 return;
             }
-            if (player.equals(target)) {
+            if (!RedisBungee.getApi().isPlayerOnline(uuid)) {
+                player.sendMessage(CC.translate("&c目标玩家不在线"));
+                return;
+            }
+            if (player.getUniqueId().equals(uuid)) {
                 player.sendMessage(CC.translate("&c你不能举报自己！"));
                 return;
             }
@@ -60,12 +64,12 @@ public class ReportCommand extends Command {
 
                 String id = UUIDUtil.generateShortUuid();
 
-                ReportData reportData = new ReportData(id, player.getUniqueId().toString(), target.getUniqueId().toString(), builder.toString());
+                ReportData reportData = new ReportData(id, player.getUniqueId().toString(), uuid.toString(), builder.toString());
                 ReportsData.get().getActiveReports().add(reportData);
                 ReportsData.get().save();
 
                 cooldownMap.put(player.getUniqueId(), new Cooldown(1000 * 30));
-                player.sendMessage(CC.translate("&a我们已经接到了您对&e" + target.getName() + "&a的举报，原因是&e" + builder.toString()));
+                player.sendMessage(CC.translate("&a我们已经接到了您对&e" + args[0] + "&a的举报，原因是&e" + builder.toString()));
                 player.sendMessage(CC.translate("&a您的举报已经提交给所有的在线工作人员和反作弊，我们知道您一样不喜欢破坏规则的玩家，我们将在第一时间为您处理"));
                 player.sendMessage(CC.translate("&a您的举报回执码为: &e" + id + "&a,您可以使用回执码进行举报进度查询"));
                 player.sendMessage(CC.translate("&a关于聊天举报，我们推荐您使用&e/chatreport 玩家名"));
@@ -74,9 +78,9 @@ public class ReportCommand extends Command {
                 chat.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("&9点击复制举报编号").create()));
                 chat.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, id));
 
-                TextComponent chatComponentBuilder = new TextComponent(CC.translate("&9[REPORT] &7" + player.getName() + "&9 举报了 &7" + target.getName() + "&7,理由: &9" + builder.toString()));
-                chatComponentBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("&9点击传送到目标服务器").create()));
-                chatComponentBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + target.getServer().getInfo().getName()));
+                TextComponent chatComponentBuilder = new TextComponent(CC.translate("&9[REPORT] &7" + player.getName() + "&9 举报了 &7" + args[0] + "&7,理由: &9" + builder.toString()));
+                chatComponentBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.translate("&9点击传送到目标服务器")).create()));
+                chatComponentBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + RedisBungee.getApi().getServerFor(uuid).getName()));
 
                 TextComponent result1 = new TextComponent(CC.translate("&7处理结果反馈: "));
                 TextComponent result2 = new TextComponent(CC.translate("&9[&c&l确认违规&9] "));

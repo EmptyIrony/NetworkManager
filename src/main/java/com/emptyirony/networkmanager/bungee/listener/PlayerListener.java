@@ -71,7 +71,7 @@ public class PlayerListener implements Listener {
             String type = split[0];
 
             LoginData data = LoginData.getByUuid(player.getUniqueId());
-            if (type == null) {
+            if (type == null || data == null) {
                 return;
             }
             if (type.equalsIgnoreCase("hub")) {

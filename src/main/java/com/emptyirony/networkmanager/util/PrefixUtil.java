@@ -1,14 +1,7 @@
 package com.emptyirony.networkmanager.util;
 
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.cacheddata.CachedMetaData;
-import net.luckperms.api.model.user.User;
-import net.luckperms.api.model.user.UserManager;
-import net.luckperms.api.query.QueryMode;
-import net.luckperms.api.query.QueryOptions;
+import me.allen.chen.user.User;
 
-import java.util.Comparator;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -20,18 +13,8 @@ import java.util.UUID;
 
 public class PrefixUtil {
 
+    @Deprecated
     public static String getPrefix(UUID uuid) {
-        UserManager userManager = LuckPermsProvider.get().getUserManager();
-        User user = userManager.getUser(uuid);
-        if (user == null) {
-            return "";
-        }
-        CachedMetaData data = user.getCachedData().getMetaData(QueryOptions.builder(QueryMode.NON_CONTEXTUAL).build());
-        Optional<Integer> first = data.getPrefixes().keySet().stream().max(Comparator.naturalOrder());
-
-        if (!first.isPresent()) {
-            return "";
-        }
-        return data.getPrefixes().get(first.get());
+        return User.getByUUID(uuid).getPrefix();
     }
 }

@@ -84,8 +84,46 @@ public class ReportSystemCommand extends Command {
                     } else {
                         player.sendMessage(CC.translate("&c没有找到相关举报"));
                     }
+                } else if (args[0].equalsIgnoreCase("notsure")) {
+                    if (args.length != 2) {
+                        return;
+                    }
+                    String name = args[1];
+                    Optional<ReportData> first = ReportsData.get().getActiveReports().stream().filter(reportData -> reportData.getId().equalsIgnoreCase(name)).findFirst();
+
+                    if (first.isPresent()) {
+                        ReportData reportData = first.get();
+                        reportData.setReceiver(player.getName());
+                        reportData.setResult("NOTSURE");
+                        executeReport(player, name, reportData, "\n&c处理结果: &eNOTSURE");
+                    }
+                } else if (args[0].equalsIgnoreCase("not")) {
+                    if (args.length != 2) {
+                        return;
+                    }
+                    String name = args[1];
+                    Optional<ReportData> first = ReportsData.get().getActiveReports().stream().filter(reportData -> reportData.getId().equalsIgnoreCase(name)).findFirst();
+
+                    if (first.isPresent()) {
+                        ReportData reportData = first.get();
+                        reportData.setReceiver(player.getName());
+                        reportData.setResult("NOT");
+                        executeReport(player, name, reportData, "\n&c处理结果: &eNOT");
+                    }
                 }
             }
+        }
+    }
+
+    private void executeReport(ProxiedPlayer player, String name, ReportData reportData, String s) {
+        ReportsData.get().getActiveReports().remove(reportData);
+        ReportsData.get().getAccepted().add(reportData);
+        ReportsData.get().save();
+        NetworkMessageUtil.sendMessageWithPermission("panshi.mod", "&e" + player.getName() + "&c 处理了一个举报\n&cID: &e" + name + s);
+        String reporter = reportData.getReporter();
+        LoginData data = LoginData.getByUuid(UUID.fromString(reporter));
+        if (data != null) {
+            NetworkMessageUtil.sendMessageToPlayer(data.getName(), CC.translate("&c您的一个举报已被处理，感谢您对社区环境的贡献"));
         }
     }
 }

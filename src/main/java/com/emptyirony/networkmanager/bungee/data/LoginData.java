@@ -17,8 +17,8 @@ import java.util.UUID;
  * 4
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginData {
     private static Map<UUID, LoginData> cache = new HashMap<>();
     private String uuid;

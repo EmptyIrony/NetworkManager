@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.inventivetalent.nicknamer.command.GeneralCommands;
-import org.inventivetalent.nicknamer.command.NickCommands;
-import org.inventivetalent.nicknamer.command.SkinCommands;
 import strafe.games.core.Stone;
 
 @Getter
@@ -24,10 +21,6 @@ public class NetworkManager extends JavaPlugin {
     @Getter
     @Setter
     private int serverType;
-
-    public GeneralCommands generalCommands;
-    public NickCommands nickCommands;
-    public SkinCommands skinCommands;
 
 
     @Override
