@@ -117,7 +117,6 @@
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mongojack/mongojack -->
         <dependency>
             <groupId>org.mongojack</groupId>
             <artifactId>mongojack</artifactId>
