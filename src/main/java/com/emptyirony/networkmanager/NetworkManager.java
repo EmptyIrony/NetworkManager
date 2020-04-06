@@ -1,20 +1,17 @@
 package com.emptyirony.networkmanager;
 
 import com.emptyirony.networkmanager.network.Network;
-import com.minexd.pidgin.Pidgin;
+import com.emptyirony.networkmanager.pidgin.Pidgin;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import strafe.games.core.Stone;
 
 @Getter
 public class NetworkManager extends JavaPlugin {
     @Getter
     private static NetworkManager instance;
-    @Getter
-    @Deprecated
-    private static NetworkManager ins;
+
     private Network network;
     private boolean canJoin;
     private Pidgin pidgin;
@@ -26,8 +23,7 @@ public class NetworkManager extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        ins = this;
-        loadRedis();
+        this.pidgin = new Pidgin("network", "127.0.01", 6379, "");
         this.network = new Network();
         canJoin = false;
 
@@ -37,14 +33,5 @@ public class NetworkManager extends JavaPlugin {
                 canJoin = true;
             }
         }.runTaskLater(this, 20 * 5);
-
-        Stone.get().getHoncho().registerCommand(new TestCommand());
     }
-
-    private void loadRedis() {
-        System.out.println("connecting to Redis");
-        this.pidgin = new Pidgin("network", "127.0.01", 6379, "");
-        System.out.println("successfully connected Redis!");
-    }
-
 }

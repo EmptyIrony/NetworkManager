@@ -7,13 +7,13 @@ import com.emptyirony.networkmanager.packet.PacketAlert;
 import com.emptyirony.networkmanager.packet.PacketHeartBeat;
 import com.emptyirony.networkmanager.packet.PacketServerShutdown;
 import com.emptyirony.networkmanager.packet.PacketStaffSwitchServer;
-import com.minexd.pidgin.packet.handler.IncomingPacketHandler;
-import com.minexd.pidgin.packet.listener.PacketListener;
+import com.emptyirony.networkmanager.pidgin.packet.handler.IncomingPacketHandler;
+import com.emptyirony.networkmanager.pidgin.packet.listener.PacketListener;
+import com.emptyirony.networkmanager.util.CC;
 import me.allen.chen.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import strafe.games.core.util.CC;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -58,6 +58,7 @@ public class NetworkListener implements PacketListener {
             }
             return;
         }
+
         Player player = Bukkit.getPlayer(packet.getPlayer());
         if (player != null) {
             player.spigot().sendMessage(packet.getComponent());

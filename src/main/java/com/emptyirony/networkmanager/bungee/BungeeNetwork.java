@@ -6,7 +6,7 @@ import com.emptyirony.networkmanager.bungee.database.MongoDB;
 import com.emptyirony.networkmanager.bungee.listener.MessageListener;
 import com.emptyirony.networkmanager.bungee.listener.PlayerListener;
 import com.emptyirony.networkmanager.packet.*;
-import com.minexd.pidgin.Pidgin;
+import com.emptyirony.networkmanager.pidgin.Pidgin;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 

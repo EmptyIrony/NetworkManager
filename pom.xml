@@ -61,15 +61,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.inventivetalent.packetlistener</groupId>
-            <artifactId>api</artifactId>
-            <version>3.5.2-SNAPSHOT</version>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.2</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
         <dependency>
-            <groupId>com.emptyirony</groupId>
-            <artifactId>stone</artifactId>
-            <version>1.0</version>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -109,15 +110,17 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.emptyirony</groupId>
-            <artifactId>nicknamer</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>me.allen</groupId>
             <artifactId>Chen</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mongojack/mongojack -->
+        <dependency>
+            <groupId>org.mongojack</groupId>
+            <artifactId>mongojack</artifactId>
+            <version>2.10.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

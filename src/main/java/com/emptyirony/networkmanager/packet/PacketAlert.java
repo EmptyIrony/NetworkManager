@@ -1,8 +1,8 @@
 package com.emptyirony.networkmanager.packet;
 
+import com.emptyirony.networkmanager.pidgin.packet.Packet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.minexd.pidgin.packet.Packet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

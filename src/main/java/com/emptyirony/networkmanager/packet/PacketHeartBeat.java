@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.minexd.pidgin.packet.Packet;
+import com.emptyirony.networkmanager.pidgin.packet.Packet;
 import lombok.Getter;
 
 import java.util.ArrayList;
