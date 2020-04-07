@@ -2,9 +2,9 @@ package com.emptyirony.networkmanager.util;
 
 import com.emptyirony.networkmanager.NetworkManager;
 import com.emptyirony.networkmanager.packet.PacketAlert;
-import me.allen.chen.util.chat.ChatComponentBuilder;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.plugin.java.JavaPlugin;
+import net.minecraft.server.v1_8_R3.ChatComponentText;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 
 /**
  * 2 * @Author: EmptyIrony
@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class NetworkMessageUtil {
     public static void sendMessageToPlayer(String name, String msg) {
-        sendMessageToPlayer(name, new ChatComponentBuilder(msg).create());
+        sendMessageToPlayer(name, IChatBaseComponent.ChatSerializer.a(new ChatComponentText(msg).f()));
     }
 
     public static void sendMessageToPlayer(String name, BaseComponent[] msg) {
@@ -23,8 +23,8 @@ public class NetworkMessageUtil {
                 .sendPacket(packet);
     }
 
-    public static void sendMessageAlert(JavaPlugin plugin, String msg) {
-        sendMessageAlert(new ChatComponentBuilder(msg).create());
+    public static void sendMessageAlert(String msg) {
+        sendMessageAlert(IChatBaseComponent.ChatSerializer.a(new ChatComponentText(msg).f()));
     }
 
     public static void sendMessageAlert(BaseComponent[] msg) {
@@ -35,7 +35,7 @@ public class NetworkMessageUtil {
     }
 
     public static void sendMessageWithPermission(String permission, String msg) {
-        sendMessageWithPermission(permission, new ChatComponentBuilder(msg).create());
+        sendMessageWithPermission(permission, IChatBaseComponent.ChatSerializer.a(new ChatComponentText(msg).f()));
     }
 
     public static void sendMessageWithPermission(String permission, BaseComponent[] msg) {

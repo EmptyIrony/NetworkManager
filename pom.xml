@@ -89,6 +89,11 @@
         </dependency>
         <dependency>
             <groupId>com.emptyirony</groupId>
+            <artifactId>pidgin</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.emptyirony</groupId>
             <artifactId>tab</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
