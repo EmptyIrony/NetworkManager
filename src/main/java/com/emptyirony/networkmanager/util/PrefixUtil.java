@@ -15,6 +15,6 @@ public class PrefixUtil {
 
     @Deprecated
     public static String getPrefix(UUID uuid) {
-        return User.getByUUID(uuid).getPrefix();
+        return User.getByUUID(uuid).getActiveRank().getPrefix();
     }
 }

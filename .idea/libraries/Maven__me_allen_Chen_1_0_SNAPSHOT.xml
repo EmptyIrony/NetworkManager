@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: me.allen:Chen:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/me/allen/Chen/1.0-SNAPSHOT/Chen-1.0-20200330.013724-121.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/me/allen/Chen/1.0-SNAPSHOT/Chen-1.0-20200406.105124-214.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/me/allen/Chen/1.0-SNAPSHOT/Chen-1.0-20200330.013724-121-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/me/allen/Chen/1.0-SNAPSHOT/Chen-1.0-20200406.105124-214-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/me/allen/Chen/1.0-SNAPSHOT/Chen-1.0-20200330.013724-121-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/me/allen/Chen/1.0-SNAPSHOT/Chen-1.0-20200406.105124-214-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
