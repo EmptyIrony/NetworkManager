@@ -2,4 +2,4 @@ name: NetworkManager
 version: ${project.version}
 main: com.emptyirony.networkmanager.NetworkManager
 depend:
-  - Chen
+  - Network
